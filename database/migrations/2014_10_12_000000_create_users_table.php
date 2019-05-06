@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone');
-            $table->string('identity_card');
+            $table->string('identity_card')->unique();
             $table->date('birthday');
             $table->enum('gender', ['male', 'female']);
             $table->string('address');
@@ -31,7 +31,6 @@ class CreateUsersTable extends Migration
             $table->boolean('labor_ability');
             $table->string('employment_status')->nullable();
             $table->integer('income')->nullable();
-            $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
         });

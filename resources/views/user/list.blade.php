@@ -7,6 +7,11 @@
 @stop
 
 @section('content')
+    @if (\Session::has('success'))
+        <div class="alert alert-success">
+            {!! \Session::get('success') !!}
+        </div>
+    @endif
     <table id="user-table" class="table table-striped table-bordered display nowrap" style="width:100%">
     <thead>
         <tr>

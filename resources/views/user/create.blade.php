@@ -62,7 +62,7 @@
             <div class="form-row">
                 <div class="form-input has-feedback {{ $errors->has('district_id') ? 'has-error' : '' }}">
                     {{ Form::label('district_id', 'Quận/Huyện') }}
-                    <select class="form-control search-select" name="district_id" id="district-select" disabled>
+                    <select class="form-control search-select" name="district_id" id="district-select" readonly>
                         <option value={{ $district->id }}>{{ $district->name }}</option>
                     </select>
                     @if ($errors->has('district_id'))
@@ -268,6 +268,7 @@ textarea {
 .has-error .checkbox label{
     color: #333;
 }
+
 </style>
 @stop
 
@@ -278,7 +279,7 @@ textarea {
 
         $("#subdistrict-select").select2({
             ajax: {
-                url: "/api/subdistricts",
+                url: "/api/subdistricts?district={{ $district->id }}",
                 type: "GET",
                 data: function (params) {
                     return {
@@ -303,8 +304,8 @@ textarea {
         $('form').submit(function(e) {
             e.preventDefault();
             $.ajax({
-                url : $(this).attr('action'), // gửi ajax đến file result.php
-                type : "post", // chọn phương thức gửi là post
+                url : $(this).attr('action'),
+                type : "post",
                 data : $(this).serialize(),
                 success : function (result){
                     window.location.href = "{{ route('admin.users.index')}}";

@@ -24,7 +24,7 @@ class UserTableSeeder extends Seeder
                 'name' => 'Do Quang Huy',
                 'email' => 'huydq@gmail.com',
                 'phone' => '0368636007',
-                'identity_card' => '09062628656',
+                'identity_card' => '745632178',
                 'gender' => 'male',
                 'birthday' => '1996-10-25',
                 'address' => 'So 36, ngo 54 Phuc Tan, Hoan Kiem, Ha Noi',

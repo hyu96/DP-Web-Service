@@ -37,8 +37,8 @@
             <td>{{ $user->gender === 'male' ? 'Nam' : 'Nữ' }}</td>
             <td>{{ $user->email }}</td>
             <td>{{ $user->identity_card }}</td>
-            <td>{{ $user->userDisability->disability->name }}</td>
-            <td>{{ $user->userDisability->detail }}</td>
+            <td>{{ $user->disability->name }}</td>
+            <td>{{ $user->disability_detail }}</td>
             <td>{{ $user->academic_level }}</td>
             <td>{{ $user->specialize }}</td>
             <td>{{ $user->address }}</td>

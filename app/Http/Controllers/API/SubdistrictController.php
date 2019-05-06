@@ -10,10 +10,14 @@ use App\Models\Subdistrict;
 
 class SubdistrictController extends BaseController
 {
-    public function index()
+    public function index(Request $request)
     {
-        $district_id = Auth::user()->district_id;
-        $subdistricts = Subdistrict::where('district_id', $district_id)->get()->toArray();
+        $district_id = $request->query('district');
+        if (empty($district_id)) {
+            $subdistricts = Subdistrict::all()->toArray();
+        } else {
+            $subdistricts = Subdistrict::where('district_id', $district_id)->get()->toArray();
+        }
         return $this->responseSuccess(200, $subdistricts);
     }
 }

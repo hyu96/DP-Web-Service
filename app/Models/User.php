@@ -57,12 +57,12 @@ class User extends Authenticatable
         return $this->belongsTo('App\Models\Subdistrict', 'subdistrict_id');
     }
 
-    public function userDisability()
+    public function disability()
     {
-        return $this->hasOne('App\Models\UserDisability');
+        return $this->hasOne('App\Models\Disability');
     }
 
-    public function userNeed()
+    public function needs()
     {
         return $this->hasMany('App\Models\UserNeed');
     }

@@ -45,7 +45,7 @@ class LoginController extends Controller
         $messages = [
             'required' => ':attribute không được trống.',
             'string' => ':attribute phải là chuỗi kí tự',
-            'g-recaptcha-response.string' => 'Yêu cầu xác nhận captcha',
+            'g-recaptcha-response.required' => 'Yêu cầu xác nhận captcha',
         ];
 
         $request->validate([

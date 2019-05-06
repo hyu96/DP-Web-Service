@@ -14,4 +14,10 @@ class DistrictController extends BaseController
 		$districts = District::all();
 		return $this->responseSuccess(200, $districts);
 	}
+
+    public function show($id)
+    {
+        $district = District::find($id);
+        return $this->responseSuccess(200, $district);
+    }
 }

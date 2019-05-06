@@ -24,7 +24,7 @@ class CreateAdminsTable extends Migration
                     ->default(null);
             $table->integer('role');
             $table->string('phone');
-            $table->string('identity_card');
+            $table->string('identity_card')->unique();
             $table->date('birthday');
             $table->enum('gender', ['male', 'female']);
             $table->integer('district_id')->nullable();
