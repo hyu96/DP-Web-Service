@@ -329,28 +329,24 @@ textarea {
         });
     }
 
-    function submitForm () {
-        
-    }
-
     function fillData() {
-            $('#name').val('Do Quang Huy');
-            $('#password').val('123456789');
-            $('#password_confirmation').val('123456789');
-            $('#email').val('huydq2510@gmail.com');
-            $('#phone').val('0368636007');
-            $('#birthday').val('1996-10-25');
-            $('#gender').val('male');
-            $('#labor_ability').val('1');
-            $('#identity_card').val('0123456789');
-            $('#subdistrict-select').val('2');
-            $('#address').val('Số 14, ngõ 463 đường Hồng Hà, Hoàn Kiếm, Hà Nội');
-            $('#academic_level').val('10/10');
-            $('#specialize').val('CNTT');
-            $('#employment_status').val('Làm văn phòng');
-            $('#income').val('9500000');
-            $('#disability').val('5');
-            $('#disability_detail').val('Bình thường');
-        };
+        $('#name').val('Do Quang Huy');
+        $('#password').val('123456789');
+        $('#password_confirmation').val('123456789');
+        $('#email').val('huydq2510@gmail.com');
+        $('#phone').val('0368636007');
+        $('#birthday').val('1996-10-25');
+        $('#gender').val('male');
+        $('#labor_ability').val('1');
+        $('#identity_card').val('0123456789');
+        $('#subdistrict-select').val('2');
+        $('#address').val('Số 14, ngõ 463 đường Hồng Hà, Hoàn Kiếm, Hà Nội');
+        $('#academic_level').val('10/10');
+        $('#specialize').val('CNTT');
+        $('#employment_status').val('Làm văn phòng');
+        $('#income').val('9500000');
+        $('#disability').val('5');
+        $('#disability_detail').val('Bình thường');
+    };
 </script>
 @stop

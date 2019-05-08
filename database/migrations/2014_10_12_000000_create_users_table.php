@@ -32,7 +32,6 @@ class CreateUsersTable extends Migration
             $table->string('employment_status')->nullable();
             $table->integer('income')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

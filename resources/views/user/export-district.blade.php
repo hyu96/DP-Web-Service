@@ -15,7 +15,7 @@
             @endforeach
         </div>
     @endif
-    {!! Form::open(['url' => route('api.users.export'), 'method' => 'post']) !!}
+    {!! Form::open(['url' => route('admin.users.exportUser'), 'method' => 'post']) !!}
         <div class="row">
             <div class="col-md-4 form-group has-feedback {{ $errors->has('district_id') ? 'has-error' : '' }}">
                 {{ Form::label('district_id', 'Quận/Huyện') }}
@@ -74,31 +74,31 @@
             allowClear: true,
         });
 
-        $('form').submit(function(e) {
-            e.preventDefault();
-            $.ajax({
-                type: 'get',
-                data: {
-                    subdistrict_id: $('#district-select').val()
-                },
-                url: $(this).attr('action'),
-                success: function(data) {
-                    $("#success-msg").css("display", "block");
-                },
-                error: function(res) {
-                    $("#errors-container").html('');
-                    var errors = JSON.parse(res.responseText).messages;
-                    $('#errors-line-index').html(`Dữ liệu không phù hợp ở dòng <b>${errors.index[0]}</b>:`)
-                    Object.keys(errors).forEach(function(key) {
-                        if (key === 'index') {
-                            return;
-                        }
-                        $("#errors-container").append($("<li>").text(errors[key][0]));
-                    });
-                    $("#errors-msg").css("display", "block");
-                }
-            });
-        })
+        // $('form').submit(function(e) {
+        //     e.preventDefault();
+        //     $.ajax({
+        //         type: 'get',
+        //         data: {
+        //             subdistrict_id: $('#district-select').val()
+        //         },
+        //         url: $(this).attr('action'),
+        //         success: function(data) {
+        //             $("#success-msg").css("display", "block");
+        //         },
+        //         error: function(res) {
+        //             $("#errors-container").html('');
+        //             var errors = JSON.parse(res.responseText).messages;
+        //             $('#errors-line-index').html(`Dữ liệu không phù hợp ở dòng <b>${errors.index[0]}</b>:`)
+        //             Object.keys(errors).forEach(function(key) {
+        //                 if (key === 'index') {
+        //                     return;
+        //                 }
+        //                 $("#errors-container").append($("<li>").text(errors[key][0]));
+        //             });
+        //             $("#errors-msg").css("display", "block");
+        //         }
+        //     });
+        // })
     });
 </script>
 @stop

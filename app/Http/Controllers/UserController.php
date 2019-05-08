@@ -74,7 +74,13 @@ class UserController extends Controller
     public function exportUser(Request $request)
     {
         try {
-            return Excel::download(new UsersExport($request->district_id, $request->subdistrict_id), 'users.xlsx');
+            $district_id = $request->district_id;
+            if ($district_id === null) {
+                $district_id = Auth::user()->district_id;
+            }
+            $district = District::find($district_id);
+            $subdistrict = Subdistrict::find($request->subdistrict_id);
+            return Excel::download(new UsersExport($district_id, $request->subdistrict_id), $district->name. ' - '. $subdistrict->name. '.xlsx');
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $failures = $e->failures();
         }

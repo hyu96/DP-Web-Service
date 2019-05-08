@@ -7,8 +7,13 @@
 @stop
 
 @section('content')
+    <div class="alert alert-danger" id="errors-msg">
+       Dữ liệu nhập vào không phù hợp:
+       <div id="errors-container"></div>
+    </div>
+
     <div>
-        {!! Form::open(['url' => route('admin.admins.register'), 'method' => 'post', 'id' => 'admin-register-form']) !!}
+        {!! Form::open(['url' => route('api.admins.store'), 'method' => 'post', 'id' => 'admin-register-form']) !!}
             @csrf
             <div class="form-row">
                 <div class="form-input has-feedback {{ $errors->has('name') ? 'has-error' : '' }}">
@@ -55,9 +60,19 @@
             </div>
 
             <div class="form-row">
+                <div class="form-input has-feedback {{ $errors->has('role') ? 'has-error' : '' }}">
+                    {{ Form::label('role', 'Chức vụ') }}
+                    {{ Form::select('role', ['Cán bộ quản lý thành phố', 'Cán bộ quản lý cấp quận'], old('gender'), ['class' => 'form-control role', 'required']) }}
+                    @if ($errors->has('role'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('role') }}</strong>
+                        </span>
+                    @endif
+                </div>
+
                 <div class="form-input has-feedback {{ $errors->has('district_id') ? 'has-error' : '' }}">
                     {{ Form::label('district_id', 'Quận/Huyện') }}
-                    <select class="form-control search-select" name="district_id" id="district-select" data-value={{ old('district_id')}} required>
+                    <select class="form-control search-select" name="district_id" id="district-select" data-value={{ old('district_id')}} required disabled>
                         <option>
                         @foreach ($districts as $district)
                             <option value={{ $district->id }}>{{ $district->name }}</option>
@@ -66,20 +81,6 @@
                     @if ($errors->has('district_id'))
                         <span class="help-block">
                             <strong>{{ $errors->first('district_id') }}</strong>
-                        </span>
-                    @endif
-                </div>
-                <div class="form-input has-feedback {{ $errors->has('subdistrict_id') ? 'has-error' : '' }}">
-                    {{ Form::label('subdistrict_id', 'Phường/Xã/Thị Trấn') }}
-                    <select class="form-control search-select" name="subdistrict_id" id="subdistrict-select" data-value={{ old('subdistrict_id')}} required>
-                        <option>
-                        @foreach ($subdistricts as $subdistrict)
-                            <option value={{ $subdistrict->id }} data-type={{ $subdistrict->district_id }}>{{ $subdistrict->name }}</option>
-                        @endforeach
-                    </select>
-                    @if ($errors->has('subdistrict_id'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('subdistrict_id') }}</strong>
                         </span>
                     @endif
                 </div>
@@ -129,22 +130,6 @@
                 </div>
             </div>
 
-            <div class="form-row">
-                <div class="form-input has-feedback {{ $errors->has('role') ? 'has-error' : '' }}">
-                    {{ Form::label('role', 'Chức vụ') }}
-                    <select name="role" class="form-control" required>
-                        @foreach($roles as $role)
-                            <option value={{ $role->id }}>{{ App\Models\Role::ROLE_NAME[$role->name] }}</option>
-                        @endforeach
-                    </select>
-                    @if ($errors->has('role'))
-                    <span class="help-block">
-                        <strong>{{ $errors->first('role') }}</strong>
-                        </span>
-                    @endif
-                </div>
-            </div>
-
             <div class="form-input">
                 <button type="submit" class="btn btn-primary">Đăng ký</button>
             </div>
@@ -154,6 +139,10 @@
 
 @section('css')
 <style type="text/css">
+#errors-msg {
+    display: none;
+}
+
 #admin-register-form {
     margin-right: 35px;
     height: 100%;
@@ -174,9 +163,7 @@
 @section('js')
 <script>
     $( function() {
-        $("#birthday").datepicker(
-            { dateFormat: 'yy-mm-dd' }
-        );
+        setBirthdayInput();
 
         $('.search-select').select2({
             placeholder: 'Chọn 1 trong số lựa chọn sau',
@@ -184,33 +171,85 @@
         });
 
         $('#subdistrict-select').prop('disabled', true);
-        $('#district-select').on('change', function (e) {
-            var districtValue = $('#district-select').val();
-            if (districtValue === '') { 
-                $('#subdistrict-select').prop('disabled', true);
-                $('#subdistrict-select').empty().select2({
-                    placeholder: 'Chọn 1 trong số lựa chọn sau',
-                    data: [],
-                    allowClear: true
-                });
-
-            } else {
-                $.ajax({
-                    url : "/api/subdistricts",
-                    type : "post",
-                    data : {
-                        district_id : districtValue
-                    },
-                    success : function (result){
-                        $('#subdistrict-select').prop('disabled', false);
-                        $('#subdistrict-select').empty().select2({
-                            data: result.subdistricts,
-                            allowClear: true
-                        });
-                    }
-                });
-            }
+        $("#district-select").select2({
+            ajax: {
+                url: "/api/districts",
+                type: "GET",
+                data: function (params) {
+                    return {
+                        q: params.term, // search term
+                    };
+                },
+                processResults: function (result) {
+                    return {
+                        results: $.map(result.data, function (subdistrict) {
+                            return {
+                                id: subdistrict.id,
+                                text: subdistrict.name
+                            }
+                        })
+                    };
+                }
+            },
+            placeholder: 'Chọn 1 trong số lựa chọn sau',
+            allowClear: true,
         });
+
+        $('.role').on('change', function(e) {
+            var value = $(this).val()
+            if (value === 0) {
+                $('#district-select').prop('disabled', true);
+            } else {
+                $('#district-select').prop('disabled', false);
+            }
+        })
+
+        $('form').submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                url : $(this).attr('action'),
+                type : "post",
+                data : $(this).serialize(),
+                success : function (result){
+                    window.location.href = "{{ route('admin.admins.index')}}";
+                },
+                error: function (response) {
+                    $("#errors-container").html('');
+                    var errors = JSON.parse(response.responseText).messages;
+                    Object.keys(errors).forEach(function(key) {
+                        $("#errors-container").append($("<li>").text(errors[key][0]));
+                    });
+                    $("#errors-msg").css("display", "block");
+                }
+            });
+        })
     });
+
+    function setBirthdayInput () {
+        $('#birthday').datetimepicker({
+            timepicker:false,
+            format: 'Y-m-d'
+        });
+    }
+
+    function fillData() {
+        $('#name').val('Do Quang Huy');
+        $('#password').val('123456789');
+        $('#password_confirmation').val('123456789');
+        $('#email').val('huydq2510@gmail.com');
+        $('#phone').val('0368636007');
+        $('#birthday').val('1996-10-25');
+        $('#gender').val('male');
+        $('#labor_ability').val('1');
+        $('#identity_card').val('123456789');
+        $('#subdistrict-select').val('2');
+        $('#address').val('Số 14, ngõ 463 đường Hồng Hà, Hoàn Kiếm, Hà Nội');
+        $('#academic_level').val('10/10');
+        $('#specialize').val('CNTT');
+        $('#employment_status').val('Làm văn phòng');
+        $('#income').val('9500000');
+        $('#disability').val('5');
+        $('#disability_detail').val('Bình thường');
+    };
 </script>
 @stop

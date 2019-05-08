@@ -19,7 +19,6 @@ class AdminsTableSeeder extends Seeder
             [
                 'name' => 'AdminCity',
                 'email' => 'admin_city@gmail.com',
-                'image' => 'admin_city.png',
                 'phone' => '0123456789',
                 'role' => 0,
                 'identity_card' => '978456321',
@@ -34,7 +33,6 @@ class AdminsTableSeeder extends Seeder
             [
                 'name' => 'AdminDistrict',
                 'email' => 'admin_district@gmail.com',
-                'image' => 'admin_district.png',
                 'phone' => '0123456789',
                 'role' => 1,
                 'identity_card' => '456817293',

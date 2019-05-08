@@ -19,6 +19,7 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('/users', 'UserController@index')->name('admin.users.index');
     Route::get('/users/import', 'UserController@showUserImport')->name('admin.users.showUserImport');
     Route::get('/users/export', 'UserController@showUserExport')->name('admin.users.showUserExport');
+    Route::post('/users/export', 'UserController@exportUser')->name('admin.users.exportUser');
     Route::get('/users/create', 'UserController@create')->name('admin.users.showUserCreateForm');
     Route::get('/users/{id}', 'UserController@show')->name('admin.users.show');
     Route::post('/users/approve/{id}', 'UserController@approve')->name('admin.users.approve');
@@ -26,7 +27,7 @@ Route::group(['middleware' => ['web', 'auth']], function () {
 
     Route::get('/admins', 'AdminController@index')->name('admin.admins.index');
     Route::get('/admins/create', 'AdminController@create')->name('admin.admins.create');
-    Route::post('/admins/register', 'Auth\RegisterController@create')->name('admin.admins.register');
+    Route::get('/admins/{id}', 'AdminController@show')->name('admin.admins.show');
 
     Route::get('/reports', 'ReportController@all')->name('admin.report.all');
 

@@ -235,4 +235,15 @@ class UserController extends BaseController
             $failures = $e->failures();
         }
     }
+
+    public function delete($id)
+    {
+        $user = User::find($id);
+        if ($user === null) {
+            return $this->responseErrors(400, 'User not found');
+        } else {
+            $user->delete();
+            return $this->responseSuccess(200, 'Delete success');
+        }
+    }
 }

@@ -19,20 +19,25 @@ class AdminController extends Controller
 
     public function create()
     {
-    	$districts = District::all();
+        $districts = District::all();
         $subdistricts = Subdistrict::all();
-        if (Auth::guard('admin')->user()->hasRole('superadministrator')) {
-            $roles = Role::whereIn('name', ['superadministrator', 'district_administrator', 'subdistrict_administrator'])->get();
-        } else if (Auth::guard('admin')->user()->hasRole('district_administrator')) {
-            $roles = Role::whereIn('name', ['district_administrator', 'subdistrict_administrator'])->get();
-        } else {
-            $roles = Role::whereIn('name', ['subdistrict_administrator'])->get();
-        }
-        return view('admin.admin.create')->with([
-        	'districts' => $districts,
-        	'subdistricts' => $subdistricts,
-            'roles' => $roles
+
+        return view('admin.create')->with([
+            'districts' => $districts,
+            'subdistricts' => $subdistricts,
         ]);
     }
 
+    public function show($id)
+    {
+        $districts = District::all();
+        $subdistricts = Subdistrict::all();
+        $admin = Admin::where('id', $id)->with(['district'])->first();
+        return view('admin.show')->with([
+            'admin' => $admin,
+            'districts' => $districts,
+            'subdistricts' => $subdistricts,
+            'id' => $id
+        ]);
+    }
 }

@@ -25,8 +25,8 @@ class UsersExport implements FromView
         $users = User::where([
             'district_id' => $this->district_id,
             'subdistrict_id' => $this->subdistrict_id
-        ])->with(['disability', 'userNeed.need'])->get();
-        
+        ])->with(['disability', 'needs.need'])->get();
+
         return view('user.export-template', [
             'users' => $users
         ]);

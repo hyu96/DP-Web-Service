@@ -29,28 +29,27 @@
     </thead>
     </table>
 
-<form action="/users/approve/" method="POST" id="approve-form">
-    @csrf
-    <div id="myModal" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Xác thực người dùng</h4>
-          </div>
-          <div class="modal-body">
-            <p>Bạn có chắc chắn về thông tin người dùng này không ?</p>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary btn-confirm-modal">Xác thực</button>
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+    <form action="/users/" method="post" id="delete-form">
+        @csrf
+        <input type="hidden" name="_method" value="delete" />
+        <div id="myModal" class="modal" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Xoá người khuyết tật</h4>
+              </div>
+              <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa thông tin người khuyết tật này không ?</p>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-danger btn-submit-modal">Xóa</button>
+                <button type="button" class="btn " data-dismiss="modal">Đóng</button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-</form>
-
+    </form>
 @endsection
 
 @section('css')
@@ -65,7 +64,6 @@
     <script>
         $( function() {
             var approveId = null;
-
             $('#user-table').DataTable( {
                 'ajax': '/api/users',
                 'scrollX': true,
@@ -110,15 +108,40 @@
                         data: '',
                         render: function ( data, type, row, meta ) {
                             var html = '';
-                            html += "<a class='btn btn-danger'><i class='fa fa-trash-o'></i> Xóa</a>";
+                            if ('{{Auth::user()->role === 1}}') {
+                                html += `<a class='btn btn-danger btn-delete-user' data-id='${row.id}'><i class='fa fa-trash-o'></i> Xóa</a>`;
+                            }
                             return html;
                         },
                     }
                 ],
             });
 
-            $('.btn-approve').click(function() {
-                approveId = $(this).data('id');
+            $(document).on('click', '.btn-delete-user', function(e) {
+                deleteId = $(this).data('id');
+                $('#myModal').modal();
+            })
+
+            $(document).on('click', '.btn-submit-modal', function(e) {
+                e.preventDefault();
+                var url = 'api/users/' + deleteId;
+                console.log(url);
+                $.ajax({
+                    url : url,
+                    type : "delete",
+                    data : $(this).serialize(),
+                    success : function (result){
+                        window.location.href = "{{ route('admin.users.index')}}";
+                    },
+                    error: function (response) {
+                        $("#errors-container").html('');
+                        var errors = JSON.parse(response.responseText).messages;
+                        Object.keys(errors).forEach(function(key) {
+                            $("#errors-container").append($("<li>").text(errors[key][0]));
+                        });
+                        $("#errors-msg").css("display", "block");
+                    }
+                });
             })
         });
     </script>

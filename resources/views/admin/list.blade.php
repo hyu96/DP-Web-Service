@@ -23,6 +23,28 @@
         </tr>
     </thead>
     </table>
+
+    <form action="/admins/" method="post" id="delete-form">
+        @csrf
+        <input type="hidden" name="_method" value="delete" />
+        <div id="myModal" class="modal" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Xoá cán bộ quản lý</h4>
+              </div>
+              <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa thông tin cán bộ quản lý này không ?</p>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-danger btn-submit-modal">Xóa</button>
+                <button type="button" class="btn " data-dismiss="modal">Đóng</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
 @endsection
 
 @section('js')
@@ -72,7 +94,7 @@
                         data: '',
                         render: function ( data, type, row, meta ) {
                             var html = '';
-                            html += `<a class='btn btn-info user-info' href='/admins/admins/${row.id}' style='margin-right: 20px; width: 80px'>Thông tin</a>`;
+                            html += `<a class='btn btn-info user-info' href='/admins/${row.id}' style='margin-right: 20px; width: 80px'>Thông tin</a>`;
                             return html;
                         },
                     },
@@ -80,7 +102,9 @@
                         data: '',
                         render: function ( data, type, row, meta ) {
                             var html = '';
-                            html += "<a class='btn btn-danger' style='width: 80px'>Xóa</button>";
+                            if ('{{Auth::user()->role === 0}}') {
+                                html += `<a class='btn btn-danger btn-delete-admin' style='width: 80px' data-id='${row.id}'>Xóa</button>`;
+                            }
                             return html;
                         },
                     },
@@ -90,6 +114,33 @@
                     'orderable': false,
                 }]
             });
+
+            $(document).on('click', '.btn-delete-admin', function(e) {
+                deleteId = $(this).data('id');
+                $('#myModal').modal();
+            })
+
+            $(document).on('click', '.btn-submit-modal', function(e) {
+                e.preventDefault();
+                var url = 'api/admins/' + deleteId;
+                console.log(url);
+                $.ajax({
+                    url : url,
+                    type : "delete",
+                    data : $(this).serialize(),
+                    success : function (result){
+                        window.location.href = "{{ route('admin.admins.index')}}";
+                    },
+                    error: function (response) {
+                        $("#errors-container").html('');
+                        var errors = JSON.parse(response.responseText).messages;
+                        Object.keys(errors).forEach(function(key) {
+                            $("#errors-container").append($("<li>").text(errors[key][0]));
+                        });
+                        $("#errors-msg").css("display", "block");
+                    }
+                });
+            })
         });
     </script>
 @endsection

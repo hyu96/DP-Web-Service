@@ -28,7 +28,7 @@
     <tbody>
     @foreach($users as $key => $user)
         @php
-            $needIds = $user->userNeed->pluck('need_id')->toArray()
+            $needIds = $user->needs->pluck('need_id')->toArray()
         @endphp
         <tr>
             <td>{{ $user->id }}</td>

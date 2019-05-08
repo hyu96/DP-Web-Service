@@ -15,7 +15,7 @@
             @endforeach
         </div>
     @endif
-    {!! Form::open(['url' => route('api.users.export'), 'method' => 'post']) !!}
+    {!! Form::open(['url' => route('admin.users.exportUser'), 'method' => 'post']) !!}
         <div class="row">
             <div class="col-md-4 form-group has-feedback {{ $errors->has('district_id') ? 'has-error' : '' }}">
                 {{ Form::label('district_id', 'Quận/Huyện') }}
@@ -109,8 +109,6 @@
                 });
             }
         });
-
-
     });
 </script>
 @stop

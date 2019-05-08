@@ -20,8 +20,12 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/users/export', 'API\UserController@export')->name('api.users.export');
     Route::get('/users/{id}', 'API\UserController@show')->name('api.users.show');
     Route::put('/users/{id}', 'API\UserController@edit')->name('api.users.edit');
+    Route::delete('/users/{id}', 'API\UserController@delete')->name('api.users.delete');
 
 	Route::get('/admins', 'API\AdminController@index')->name('api.admins.index');
+    Route::post('/admins', 'API\AdminController@store')->name('api.admins.store');
+    Route::delete('/admins/{id}', 'API\AdminController@delete')->name('api.admins.delete');
+    Route::put('/admins/{id}', 'API\AdminController@edit')->name('api.admins.edit');
 
 	Route::get('/reports', 'API\ReportController@index')->name('api.reports.index');
 

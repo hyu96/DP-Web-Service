@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class User extends Authenticatable
 {
     use Notifiable;
-    use SoftDeletes;
 
     const NOT_APPROVED = 0;
     const APPROVED = 1;
@@ -59,7 +58,7 @@ class User extends Authenticatable
 
     public function disability()
     {
-        return $this->hasOne('App\Models\Disability');
+        return $this->belongsTo('App\Models\Disability');
     }
 
     public function needs()
