@@ -26,6 +26,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/admins', 'API\AdminController@store')->name('api.admins.store');
     Route::delete('/admins/{id}', 'API\AdminController@delete')->name('api.admins.delete');
     Route::put('/admins/{id}', 'API\AdminController@edit')->name('api.admins.edit');
+    Route::get('/info', 'API\AdminController@detail')->name('api.admins.detail');
+    Route::get('/info/reset-password', 'API\AdminController@resetPassword')->name('api.admins.reset.password');
 
 	Route::get('/reports', 'API\ReportController@index')->name('api.reports.index');
 

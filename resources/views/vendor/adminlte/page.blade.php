@@ -128,11 +128,19 @@
 
     </div>
     <!-- ./wrapper -->
+    <div class="loading-spinner"><!-- Place at bottom of page --></div>
 @stop
 
 @section('adminlte_js')
     <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
     <script type="text/javascript">
+        $body = $("body");
+
+        $(document).on({
+            ajaxStart: function() { $body.addClass("loading-modal");},
+            ajaxStop: function() { $body.removeClass("loading-modal");}
+        });
+        
         $.ajaxSetup({
             beforeSend: function (xhr)
             {

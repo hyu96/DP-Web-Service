@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['middleware' => ['web', 'auth']], function () {
+Route::group(['middleware' => ['web', 'auth', 'verified']], function () {
     Route::get('/', function () {
         return view('home');
     })->name('admin.homepage');
@@ -35,10 +35,13 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('/news/create', 'NewsController@create')->name('admin.news.create');
     Route::post('/news/store', 'NewsController@store')->name('admin.news.store');
     Route::get('/news/{id}', 'NewsController@show')->name('admin.news.show');
+
+    Route::get('/info', 'AdminController@detail')->name('admin.admins.detail');
+    Route::get('/info/reset-password', 'AdminController@resetPassword')->name('admin.admins.reset.password');
 });
 
 Route::get('/home', function () {
     return redirect('/');
 });
 
-Auth::routes();
+Auth::routes(['verify' => true]);

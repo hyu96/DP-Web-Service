@@ -16,4 +16,9 @@ class UserNeed extends Model
     {
     	return $this->belongsTo('App\Models\Need');
     }
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
 }

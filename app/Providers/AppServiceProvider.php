@@ -30,57 +30,70 @@ class AppServiceProvider extends ServiceProvider
         $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
             if (Auth::user()->role === ADMIN::DISTRICT_ADMIN) {
                 $items = [
-                    'Người dùng',
+                    'Người khuyết tật',
                     [
-                        'text' => 'Danh sách người dùng',
+                        'text' => 'Danh sách người khuyết tật',
                         'url'  => 'users',
                         'icon'  => 'user',
                         'active' => ['users']
                     ],
                     [
-                        'text' => 'Thêm người dùng',
+                        'text' => 'Thêm người khuyết tật',
                         'url'  => 'users/create',
                         'icon'  => 'plus-square',
                         'active' => ['users/create']
                     ],
                     [
-                        'text' => 'Import người dùng',
+                        'text' => 'Import người khuyết tật',
                         'url'  => 'users/import',
                         'icon'  => 'upload',
                         'active' => ['users/import']
                     ],
                     [
-                        'text' => 'Export người dùng',
+                        'text' => 'Export người khuyết tật',
                         'url'  => 'users/export',
                         'icon'  => 'download',
                         'active' => ['users/export']
                     ],
                     'Admin',
                     [
-                        'text' => 'Danh sách quản trị viên',
-                        'url'  => 'admins',
-                        'icon'  => 'user',
+                        'text'   => 'Danh sách quản trị viên',
+                        'url'    => 'admins',
+                        'icon'   => 'user',
                         'active' => ['admins']
                     ],
                     'Báo cáo',
                     [
                         'text'    => 'Biểu đồ',
                         'icon'    => 'bar-chart',
-                        'url'  => 'reports',
+                        'url'     => 'reports',
                         'active'  => ['reports'],
+                    ],
+                    'Tài khoản cá nhân',
+                    [
+                        'text'    => 'Thông tin',
+                        'icon'    => 'user',
+                        'url'     => 'info',
+                        'active'  => ['info'],
+                    ],
+                    [
+                        'text'    => 'Đổi mật khẩu',
+                        'icon'    => 'cog',
+                        'url'     => 'info/reset-password',
+                        'active'  => ['info/reset-password'],
                     ],
                 ];
             } else {
                 $items = [
-                    'Người dùng',
+                    'Người khuyết tật',
                     [
-                        'text' => 'Danh sách người dùng',
+                        'text' => 'Danh sách người khuyết tật',
                         'url'  => 'users',
                         'icon'  => 'user',
                         'active' => ['users']
                     ],
                     [
-                        'text' => 'Export người dùng',
+                        'text' => 'Export người khuyết tật',
                         'url'  => 'users/export',
                         'icon'  => 'download',
                         'active' => ['users/export']
@@ -104,6 +117,19 @@ class AppServiceProvider extends ServiceProvider
                         'icon'    => 'bar-chart',
                         'url'  => 'reports',
                         'active'  => ['reports'],
+                    ],
+                    'Tài khoản cá nhân',
+                    [
+                        'text'    => 'Thông tin',
+                        'icon'    => 'user',
+                        'url'     => 'info',
+                        'active'  => ['info'],
+                    ],
+                    [
+                        'text'    => 'Đổi mật khẩu',
+                        'icon'    => 'cog',
+                        'url'     => 'info/reset-password',
+                        'active'  => ['info/reset-password'],
                     ],
                 ];
             }

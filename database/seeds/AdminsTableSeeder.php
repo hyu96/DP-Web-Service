@@ -27,6 +27,7 @@ class AdminsTableSeeder extends Seeder
                 'birthday' => '1996-10-25',
                 'district_id' => null,
                 'api_token' => Str::random(60),
+                'email_verified_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -41,6 +42,7 @@ class AdminsTableSeeder extends Seeder
                 'birthday' => '1996-10-25',
                 'district_id' => 2,
                 'api_token' => Str::random(60),
+                'email_verified_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
             ]

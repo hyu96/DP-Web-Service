@@ -10,14 +10,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Str;
 
 class AdminController extends BaseController
 {
     public function index()
-	{
-		$admins = Admin::with(['district'])->get();
-		return $this->responseSuccess(200, $admins);
-	}
+    {
+        $admins = Admin::with(['district'])->get();
+        return $this->responseSuccess(200, $admins);
+    }
 
     public function store(Request $request)
     {
@@ -57,8 +59,10 @@ class AdminController extends BaseController
             'gender' => $data['gender'],
             'role' => $data['role'],
             'district_id' => $data['role'] === '0' ? null : $data['district_id'],
+            'api_token' => Str::random(60),
         ]);
 
+        event(new Registered($admin));
         return $this->responseSuccess(200, $admin);
     }
 
@@ -71,5 +75,11 @@ class AdminController extends BaseController
             $admin->delete();
             return $this->responseSuccess(200, 'Delete success');
         }
+    }
+
+    public function detail()
+    {
+        $admin = Auth::user();
+        return $this->responseSuccess(200, $admin);
     }
 }

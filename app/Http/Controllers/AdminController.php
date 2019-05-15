@@ -32,12 +32,20 @@ class AdminController extends Controller
     {
         $districts = District::all();
         $subdistricts = Subdistrict::all();
-        $admin = Admin::where('id', $id)->with(['district'])->first();
         return view('admin.show')->with([
-            'admin' => $admin,
             'districts' => $districts,
             'subdistricts' => $subdistricts,
             'id' => $id
+        ]);
+    }
+
+    public function detail()
+    {
+        $districts = District::all();
+        $subdistricts = Subdistrict::all();
+        return view('info.detail')->with([
+            'districts' => $districts,
+            'subdistricts' => $subdistricts,
         ]);
     }
 }
