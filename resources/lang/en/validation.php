@@ -145,6 +145,7 @@ return [
     */
 
     'attributes' => [
+        'email' => 'Email',
         'name' => 'Họ tên',
         'password' => 'Mật khẩu',
         'identity_card' => 'Số chứng minh thư nhân dân',
@@ -160,7 +161,8 @@ return [
         'disability' => 'Dạng tật',
         'disability_detail' => 'Chi tiết tình trạng kt',
         'specialize' => 'Chuyên môn',
-        'need' => 'Nhu cầu'
+        'need' => 'Nhu cầu',
+        'new_password' => 'Mật khẩu mới'
     ],
 
 ];

@@ -80,9 +80,7 @@
 
                 <div class="form-input has-feedback {{ $errors->has('subdistrict_id') ? 'has-error' : '' }}">
                     {{ Form::label('subdistrict_id', 'Phường/Xã/Thị Trấn') }}
-                    {{-- <select class="form-control search-select" name="subdistrict_id" id="subdistrict-select" disabled={{ $disabled }}> --}}
                     {{ Form::select('subdistrict_id', [], '', ['class' => 'form-control search-select', 'id' => "subdistrict-select",'disabled' => $disabled]) }}
-                    {{-- </select> --}}
                     @if ($errors->has('subdistrict_id'))
                         <span class="help-block">
                             <strong>{{ $errors->first('subdistrict_id') }}</strong>

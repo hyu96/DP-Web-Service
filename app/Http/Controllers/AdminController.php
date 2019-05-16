@@ -48,4 +48,9 @@ class AdminController extends Controller
             'subdistricts' => $subdistricts,
         ]);
     }
+
+    public function resetPassword()
+    {
+        return view('info.reset');
+    }
 }

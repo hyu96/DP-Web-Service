@@ -12,6 +12,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Str;
+use Illuminate\Support\MessageBag;
 
 class AdminController extends BaseController
 {
@@ -81,5 +82,37 @@ class AdminController extends BaseController
     {
         $admin = Auth::user();
         return $this->responseSuccess(200, $admin);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $data = $request->all();
+        $messages = [
+            'required' => 'Giá trị :attribute không được trống.',
+            'string' => 'Giá trị của :attribute phải là chuỗi kí tự',
+            'confirmed' => 'Giá trị nhập lại mật khẩu mới không chính xác',
+            'min' => 'Giá trị :attribute tối thiểu :min kí tự',
+            'max' => 'Giá trị :attribute tối đa :max kí tự'
+        ];
+
+        $validator = Validator::make($data, [
+            'password' => ['required', 'string', 'max:255'],
+            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
+        ], $messages);
+
+        if ($validator->fails()) {
+            return $this->responseErrors(400, $validator->errors());
+        }
+
+        $admin = Auth::user();
+        if (!Hash::check($data['password'], $admin->password)) {
+            $messageBag = new MessageBag;
+            $messageBag->add('comfirm_old_password', 'Mật khẩu cũ không chính xác');
+            return $this->responseErrors(400, $messageBag->getMessages());
+        }
+
+        $admin->password = Hash::make($data['new_password']);
+        $admin->save();
+        return $this->responseSuccess(200, 'Reset password success');
     }
 }
