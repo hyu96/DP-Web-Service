@@ -13,7 +13,7 @@
             <div class="form-row">
                 <div class="form-input has-feedback {{ $errors->has('name') ? 'has-error' : '' }}">
                     {{ Form::label('name', 'Họ tên') }}
-                    {{ Form::text('name', $admin->name, ['class' => 'form-control', 'required', 'autocomplete' => 'off', 'disabled' => true]) }}
+                    {{ Form::text('name', '', ['class' => 'form-control', 'required', 'autocomplete' => 'off', 'disabled' => !$editable]) }}
                     @if ($errors->has('name'))
                     <span class="help-block">
                         <strong>{{ $errors->first('name') }}</strong>
@@ -23,7 +23,7 @@
                 
                 <div class="form-input has-feedback {{ $errors->has('email') ? 'has-error' : '' }}">
                     {{ Form::label('email', 'Email') }}
-                    {{ Form::email('email', $admin->email, ['class' => 'form-control', 'required', 'autocomplete' => 'off', 'disabled' => true]) }}
+                    {{ Form::email('email', '', ['class' => 'form-control', 'required', 'autocomplete' => 'off', 'disabled' => !$editable]) }}
                     @if ($errors->has('email'))
                     <span class="help-block">
                         <strong>{{ $errors->first('email') }}</strong>
@@ -35,7 +35,7 @@
             <div class="form-row">
                 <div class="form-input has-feedback {{ $errors->has('role') ? 'has-error' : '' }}">
                     {{ Form::label('role', 'Chức vụ') }}
-                    {{ Form::select('role', ['Cán bộ quản lý thành phố', 'Cán bộ quản lý cấp quận'], $admin->role, ['class' => 'form-control role', 'disabled' => true]) }}
+                    {{ Form::select('role', ['Cán bộ quản lý thành phố', 'Cán bộ quản lý cấp quận'], '', ['class' => 'form-control role', 'disabled' => !$editable]) }}
                     @if ($errors->has('role'))
                     <span class="help-block">
                         <strong>{{ $errors->first('role') }}</strong>
@@ -45,10 +45,8 @@
 
                 <div class="form-input has-feedback {{ $errors->has('district_id') ? 'has-error' : '' }}">
                     {{ Form::label('district_id', 'Quận/Huyện') }}
-                    <select class="form-control search-select" name="district_id" id="district-select" disabled>
-                        @if(!empty($admin->district))
-                            <option value={{$admin->district_id}}>{{ $admin->district->name }}</option>
-                        @endif
+                    <select class="form-control search-select" name="district_id" id="district-select">
+                        
                     </select>
                     @if ($errors->has('district_id'))
                         <span class="help-block">
@@ -61,7 +59,7 @@
             <div class="form-row">
                 <div class="form-input has-feedback {{ $errors->has('gender') ? 'has-error' : '' }}">
                     {{ Form::label('gender', 'Giới tính') }}
-                    {{ Form::select('gender', ['male' => 'Nam','female' => 'Nữ'], $admin->gender, ['class' => 'form-control', 'required', 'placeholder' => 'Chọn 1 trong số những lựa chọn sau', 'disabled' => true]) }}
+                    {{ Form::select('gender', ['male' => 'Nam','female' => 'Nữ'], '', ['class' => 'form-control', 'required', 'placeholder' => 'Chọn 1 trong số những lựa chọn sau', 'disabled' => !$editable]) }}
                     @if ($errors->has('gender'))
                     <span class="help-block">
                         <strong>{{ $errors->first('gender') }}</strong>
@@ -71,7 +69,7 @@
 
                 <div class="form-input has-feedback {{ $errors->has('birthday') ? 'has-error' : '' }}">
                     {{ Form::label('birthday', 'Ngày sinh') }}
-                    {{ Form::text('birthday', $admin->birthday, ['class' => 'form-control', 'id' => 'birthday', 'required', 'autocomplete' => 'off', 'disabled' => true]) }}
+                    {{ Form::text('birthday', '', ['class' => 'form-control', 'id' => 'birthday', 'required', 'autocomplete' => 'off', 'disabled' => !$editable]) }}
                     @if ($errors->has('birthday'))
                         <span class="help-block">
                             <strong>{{ $errors->first('birthday') }}</strong>
@@ -83,7 +81,7 @@
             <div class="form-row">
                 <div class="form-input has-feedback {{ $errors->has('phone') ? 'has-error' : '' }}">
                     {{ Form::label('phone', 'Số điện thoại') }}
-                    {{ Form::text('phone', $admin->phone, ['class' => 'form-control', 'required', 'autocomplete' => 'off', 'disabled' => true]) }}
+                    {{ Form::text('phone', '', ['class' => 'form-control', 'required', 'autocomplete' => 'off', 'disabled' => !$editable]) }}
                     @if ($errors->has('phone'))
                     <span class="help-block">
                         <strong>{{ $errors->first('phone') }}</strong>
@@ -93,7 +91,7 @@
 
                 <div class="form-input has-feedback {{ $errors->has('identity_card') ? 'has-error' : '' }}">
                     {{ Form::label('identity_card', 'Số chứng minh thư nhân dân') }}
-                    {{ Form::text('identity_card', $admin->identity_card, ['class' => 'form-control', 'required', 'autocomplete' => 'off', 'disabled' => true]) }}
+                    {{ Form::text('identity_card', '', ['class' => 'form-control', 'required', 'autocomplete' => 'off', 'disabled' => !$editable]) }}
                     @if ($errors->has('identity_card'))
                     <span class="help-block">
                         <strong>{{ $errors->first('identity_card') }}</strong>
@@ -101,6 +99,12 @@
                     @endif
                 </div>
             </div>
+            
+            @if ($editable)
+            <div class="form-input">
+                <button type="submit" class="btn btn-primary">Chỉnh sửa</button>
+            </div>
+            @endif
         {!! Form::close() !!}
     </div>
 @stop
@@ -130,34 +134,66 @@
 
 @section('js')
 <script>
-    $( function() {
+    $( function () {
+        $.ajax({
+            url : '/api/districts',
+            type : "get",
+            success : function (result){
+                districts = result.data.map((district, index) => {
+                    return {
+                        id: district.id,
+                        text: district.name
+                    }
+                })
+                $('#district-select').select2({
+                    data: districts,
+                    placeholder: 'Chọn 1 trong số lựa chọn sau',
+                    allowClear: true
+                });
+            }
+        });
+
+        getUserData();
+
+        $('.role').on('change', function(e) {
+            var value = $(this).val()
+            if (value === 0) {
+                $('#district-select').prop('disabled', true);
+            } else {
+                $('#district-select').prop('disabled', false);
+            }
+        })
     });
 
-    function setBirthdayInput () {
-        $('#birthday').datetimepicker({
-            timepicker:false,
-            format: 'Y-m-d'
+    function getUserData() {
+        var data = {};
+        $.ajax({
+            url : '/api/admins/{{$id}}',
+            type : "get",
+            success : function (result){
+                fillData(result.data);
+            },
+            error: function (response) {
+            }
         });
+        return data;
     }
 
-    function fillData() {
-        $('#name').val('Do Quang Huy');
-        $('#password').val('123456789');
-        $('#password_confirmation').val('123456789');
-        $('#email').val('huydq2510@gmail.com');
-        $('#phone').val('0368636007');
-        $('#birthday').val('1996-10-25');
-        $('#gender').val('male');
-        $('#labor_ability').val('1');
-        $('#identity_card').val('123456789');
-        $('#subdistrict-select').val('2');
-        $('#address').val('Số 14, ngõ 463 đường Hồng Hà, Hoàn Kiếm, Hà Nội');
-        $('#academic_level').val('10/10');
-        $('#specialize').val('CNTT');
-        $('#employment_status').val('Làm văn phòng');
-        $('#income').val('9500000');
-        $('#disability').val('5');
-        $('#disability_detail').val('Bình thường');
+    function fillData(data) {
+        $('#name').val(data.name);
+        $('#email').val(data.email);
+        $('#phone').val(data.phone);
+        $('#birthday').val(data.birthday);
+        $('#gender').val(data.gender);
+        $('#identity_card').val(data.identity_card);
+        $('#role').val(data.role);
+        console.log('{{ $editable }}');
+        if ('{{ $editable }}') {
+            $('#district-select').prop('disabled', false);
+        }
+        if (data.district_id) {
+            $('#district-select').val(data.district_id).trigger('change.select2');
+        }
     };
 </script>
 @stop

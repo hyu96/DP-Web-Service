@@ -28,6 +28,7 @@ class CreateAdminsTable extends Migration
             $table->date('birthday');
             $table->enum('gender', ['male', 'female']);
             $table->integer('district_id')->nullable();
+            $table->integer('subdistrict_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

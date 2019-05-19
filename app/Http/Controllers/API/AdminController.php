@@ -78,6 +78,12 @@ class AdminController extends BaseController
         }
     }
 
+    public function show($id)
+    {
+        $admin = Admin::with(['district'])->find($id);
+        return $this->responseSuccess(200, $admin);
+    }
+
     public function detail()
     {
         $admin = Auth::user();
@@ -112,6 +118,34 @@ class AdminController extends BaseController
         }
 
         $admin->password = Hash::make($data['new_password']);
+        $admin->save();
+        return $this->responseSuccess(200, 'Reset password success');
+    }
+
+    public function editInfo(Request $request)
+    {
+        $data = $request->all();
+        $admin = Auth::user();
+        $messages = [
+            'required' => 'Giá trị :attribute không được trống.',
+            'string' => 'Giá trị của :attribute phải là chuỗi kí tự',
+            'confirmed' => 'Giá trị nhập lại mật khẩu mới không chính xác',
+            'min' => 'Giá trị :attribute tối thiểu :min kí tự',
+            'max' => 'Giá trị :attribute tối đa :max kí tự',
+            'unique' => ':attribute đã được sử dụng'
+        ];
+
+        $validator = Validator::make($data, [
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:admins,email,'. $admin->id],
+            'phone' => ['required', 'string', 'min:10', 'regex:/^([0-9]+)$/'],
+        ], $messages);
+
+        if ($validator->fails()) {
+            return $this->responseErrors(400, $validator->errors());
+        }
+        
+        $admin->email = $data['email'];
+        $admin->phone= $data['phone'];
         $admin->save();
         return $this->responseSuccess(200, 'Reset password success');
     }

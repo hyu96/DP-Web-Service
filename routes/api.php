@@ -24,13 +24,15 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 	Route::get('/admins', 'API\AdminController@index')->name('api.admins.index');
     Route::post('/admins', 'API\AdminController@store')->name('api.admins.store');
-    Route::delete('/admins/{id}', 'API\AdminController@delete')->name('api.admins.delete');
-    Route::put('/admins/{id}', 'API\AdminController@edit')->name('api.admins.edit');
-    Route::get('/info', 'API\AdminController@detail')->name('api.admins.detail');
+    Route::put('/info', 'API\AdminController@editInfo')->name('api.admins.info.edit');
+    Route::get('/info', 'API\AdminController@detail')->name('api.admins.info.detail');
     Route::put('/info/reset-password', 'API\AdminController@resetPassword')->name('api.admins.reset.password');
+    Route::delete('/admins/{id}', 'API\AdminController@delete')->name('api.admins.delete');
+    Route::get('/admins/{id}', 'API\AdminController@show')->name('api.admins.show');
+    Route::put('/admins/{id}', 'API\AdminController@edit')->name('api.admins.edit');
 
 	Route::get('/reports', 'API\ReportController@index')->name('api.reports.index');
-
+    
 	Route::get('/districts', 'API\DistrictController@index')->name('api.districts.index');
     Route::get('/districts/{id}', 'API\DistrictController@show')->name('api.districts.show');
 

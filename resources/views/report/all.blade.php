@@ -20,8 +20,28 @@
                     </div>
                 </div>
                 <div class="box-body">
+                    <div class="col-md-12">
+                        <a href="{{ route('admin.report.export')}}?type=gender" class="btn btn-success pull-right"><i
+                                    class="fa fa-download"> Export</i></a>
+                    </div>
                     <div class="chart">
                         <canvas id="gender-chart" style="height:300px"></canvas>
+                    </div>
+-                </div>
+                <div class="container-fluid">
+                    <div id="gender-chart-type">
+                        <label>
+                            <input type="radio" value="bar" name="gender-chart-type" class="flat-red" checked>
+                            Bar
+                        </label>
+                        <label>
+                            <input type="radio" value="doughnut" name="gender-chart-type" class="flat-red">
+                            Doughnut
+                        </label>
+                        <label>
+                            <input type="radio" value="pie" name="gender-chart-type" class="flat-red">
+                            Pie
+                        </label>
                     </div>
                 </div>
             </div>
@@ -39,8 +59,24 @@
                     </div>
                 </div>
                 <div class="box-body">
+                    <div class="col-md-12">
+                        <a href="{{ route('admin.report.export')}}?type=labor_ability" class="btn btn-success pull-right"><i
+                                    class="fa fa-download"> Export</i></a>
+                    </div>
                     <div class="chart">
                         <canvas id="labor-ability-chart" style="height:300px"></canvas>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div id="labor-ability-chart-type">
+                        <label>
+                            <input type="radio" value="doughnut" name="labor-ability-chart-type" class="flat-red">
+                            Doughnut
+                        </label>
+                        <label>
+                            <input type="radio" value="pie" name="labor-ability-chart-type" class="flat-red">
+                            Pie
+                        </label>
                     </div>
                 </div>
             </div>
@@ -59,8 +95,28 @@
                     </div>
                 </div>
                 <div class="box-body">
+                    <div class="col-md-12">
+                        <a href="{{ route('admin.report.export')}}?type=disability" class="btn btn-success pull-right"><i
+                                    class="fa fa-download"> Export</i></a>
+                    </div>
                     <div class="chart">
                         <canvas id="disability-chart" style="height:300px"></canvas>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div id="need-chart-type">
+                        <label>
+                            <input type="radio" value="bar" name="disability-chart-type" class="flat-red" checked>
+                            Bar
+                        </label>
+                        <label>
+                            <input type="radio" value="radar" name="disability-chart-type" class="flat-red">
+                            Radar
+                        </label>
+                        <label>
+                            <input type="radio" value="polarArea" name="disability-chart-type" class="flat-red">
+                            Polar Area
+                        </label>
                     </div>
                 </div>
             </div>
@@ -79,8 +135,28 @@
                     </div>
                 </div>
                 <div class="box-body">
+                    <div class="col-md-12">
+                        <a href="{{ route('admin.report.export')}}?type=need" class="btn btn-success pull-right"><i
+                                    class="fa fa-download"> Export</i></a>
+                    </div>
                     <div class="chart">
                         <canvas id="need-chart" style="height:300px"></canvas>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div id="need-chart-type">
+                        <label>
+                            <input type="radio" value="bar" name="need-chart-type" class="flat-red" checked>
+                            Bar
+                        </label>
+                        <label>
+                            <input type="radio" value="radar" name="need-chart-type" class="flat-red">
+                            Radar
+                        </label>
+                        <label>
+                            <input type="radio" value="polarArea" name="need-chart-type" class="flat-red">
+                            Polar Area
+                        </label>
                     </div>
                 </div>
             </div>
@@ -88,19 +164,28 @@
     </div>
 @endsection
 
+@section('css')
+
+@endsection
+
 @section('js')
 <script type="text/javascript">
     $( document ).ready(function() {
-        function loadGenderChart() {
+        var genderChart;
+        var laborAbilityChart;
+        var disabilityChart;
+        var needChart;
+
+        function loadGenderChart(type = 'bar') {
             $.ajax({
                 url : "/api/reports?type=gender",
                 type : "get",
                 dateType:"json",
                 success : function (result){
-                    console.log(result);
+                    console.log(type);
                     var userGender = [];
-                    var genderChart = new Chart(document.getElementById("gender-chart"), {
-                        type: 'pie',
+                    genderChart = new Chart(document.getElementById("gender-chart"), {
+                        type: type,
                         data: {
                             labels: result.data.labels,
                             datasets: [
@@ -113,20 +198,23 @@
                                     ]
                                 }
                             ]
+                        },
+                        options: {
+                            maintainAspectRatio: false
                         }
                     });
                 }
             }); 
         }
 
-        function loadLaborAbilityChart() {
+        function loadLaborAbilityChart(type = 'bar') {
             $.ajax({
                 url : "/api/reports?type=labor_ability",
                 type : "get",
                 dateType:"json",
                 success : function (result){
-                    var laborAbilityChart = new Chart(document.getElementById("labor-ability-chart"), {
-                        type: 'pie',
+                    laborAbilityChart = new Chart(document.getElementById("labor-ability-chart"), {
+                        type: type,
                         data: {
                             labels: result.data.labels,
                             datasets: [
@@ -139,20 +227,23 @@
                                     ]
                                 }
                             ]
+                        },
+                        options: {
+                            maintainAspectRatio: false
                         }
                     });
                 }
             });
         }
 
-        function loadDisabilityChart() {
+        function loadDisabilityChart(type = 'bar') {
             $.ajax({
                 url : "/api/reports?type=disability",
                 type : "get",
                 dateType:"json",
                 success : function (result){
-                    var disabilityChart = new Chart(document.getElementById("disability-chart"), {
-                        type: 'bar',
+                    disabilityChart = new Chart(document.getElementById("disability-chart"), {
+                        type: type,
                         data: {
                             labels: result.data.labels,
                             datasets: [
@@ -171,6 +262,7 @@
                             ]
                         },
                         options: {
+                            maintainAspectRatio: false,
                             scales: {
                                 yAxes: [{
                                     ticks: {
@@ -184,14 +276,14 @@
             });
         }
 
-        function loadNeedChart() {
+        function loadNeedChart(type = 'bar') {
             $.ajax({
                 url : "/api/reports?type=need",
                 type : "get",
                 dateType:"json",
                 success : function (result){
-                    var needChart = new Chart(document.getElementById("need-chart"), {
-                        type: 'bar',
+                    needChart = new Chart(document.getElementById("need-chart"), {
+                        type: type,
                         data: {
                             labels: result.data.labels,
                             datasets: [
@@ -211,6 +303,7 @@
                             ]
                         },
                         options: {
+                            maintainAspectRatio: false,
                             scales: {
                                 yAxes: [{
                                     ticks: {
@@ -228,6 +321,30 @@
         loadLaborAbilityChart();
         loadDisabilityChart();
         loadNeedChart();
+
+        $('input:radio[name=gender-chart-type]').change(function () {
+            var chartType = $(this).val();
+            genderChart.destroy();
+            loadGenderChart(chartType);
+        });
+
+        $('input:radio[name=labor-ability-chart-type]').change(function () {
+            var chartType = $(this).val();
+            laborAbilityChart.destroy();
+            loadLaborAbilityChart(chartType);
+        });
+
+        $('input:radio[name=need-chart-type]').change(function () {
+            var chartType = $(this).val();
+            needChart.destroy();
+            loadLaborAbilityChart(chartType);
+        });
+
+        $('input:radio[name=disability-chart-type]').change(function () {
+            var chartType = $(this).val();
+            disabilityChart.destroy();
+            loadDisabilityChart(chartType);
+        });
     })
 </script>
 @endsection

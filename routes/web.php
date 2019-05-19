@@ -30,6 +30,7 @@ Route::group(['middleware' => ['web', 'auth', 'verified']], function () {
     Route::get('/admins/{id}', 'AdminController@show')->name('admin.admins.show');
 
     Route::get('/reports', 'ReportController@all')->name('admin.report.all');
+    Route::get('/reports/export', 'ReportController@export')->name('admin.report.export');
 
     Route::get('/news', 'NewsController@index')->name('admin.news.index');
     Route::get('/news/create', 'NewsController@create')->name('admin.news.create');

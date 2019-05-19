@@ -7,8 +7,17 @@
 @stop
 
 @section('content')
+    <div class="alert alert-danger" id="errors-msg">
+       Dữ liệu nhập vào không phù hợp:
+       <div id="errors-container"></div>
+    </div>
+    
+    <div class="alert alert-success" id="success-msg">
+       Cập nhật thông tin thành công
+    </div>
+
     <div>
-        {!! Form::open(['url' => route('api.admins.index'), 'method' => 'put', 'id' => 'admin-register-form']) !!}
+        {!! Form::open(['url' => route('api.admins.info.edit'), 'method' => 'put', 'id' => 'admin-register-form']) !!}
             @csrf
             <div class="form-row">
                 <div class="form-input has-feedback {{ $errors->has('name') ? 'has-error' : '' }}">
@@ -115,6 +124,10 @@
     display: none;
 }
 
+#success-msg {
+    display: none;
+}
+
 #admin-register-form {
     margin-right: 35px;
     height: 100%;
@@ -136,19 +149,34 @@
 <script>
     $( function() {
         getUserData();
-    });
 
-    function setBirthdayInput () {
-        $('#birthday').datetimepicker({
-            timepicker:false,
-            format: 'Y-m-d'
-        });
-    }
+        $('form').submit(function(e) {
+            e.preventDefault();
+            $("#success-msg").css("display", "none");
+            $("#errors-msg").css("display", "none");
+            $.ajax({
+                url : '{{ route('api.admins.info.edit') }}',
+                type : "put",
+                data : $(this).serialize(),
+                success : function (result){
+                    $("#success-msg").css("display", "block");
+                },
+                error: function (response) {
+                    $("#errors-container").html('');
+                    var errors = JSON.parse(response.responseText).messages;
+                    Object.keys(errors).forEach(function(key) {
+                        $("#errors-container").append($("<li>").text(errors[key][0]));
+                    });
+                    $("#errors-msg").css("display", "block");
+                }
+            });
+        })
+    });
 
     function getUserData() {
         var data = {};
         $.ajax({
-            url : '/api/info',
+            url : '{{ route('api.admins.info.detail') }}',
             type : "get",
             success : function (result){
                 fillData(result.data);

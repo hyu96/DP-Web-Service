@@ -27,8 +27,8 @@ class UserController extends BaseController
         } else {
             $users = User::where('district_id', $admin->district_id)->with(['district', 'subdistrict'])->get();
         }
-		return $this->responseSuccess(200, $users);
-	}
+        return $this->responseSuccess(200, $users);
+    }
 
     public function store(Request $request) {
         $data = $request->all();
@@ -45,7 +45,7 @@ class UserController extends BaseController
 
         $validator = Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email|admins,email'],
             'identity_card' => ['required', 'string', 'size:9', 'regex:/^([0-9]+)$/', 'unique:users'],
             'phone' => ['required', 'string', 'min:10', 'regex:/^([0-9]+)$/'],
             'birthday' => ['required', 'string'],

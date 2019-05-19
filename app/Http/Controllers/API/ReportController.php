@@ -10,6 +10,7 @@ use App\Models\Disability;
 use App\Models\Need;
 use App\Models\UserNeed;
 use App\Models\Admin;
+use App\Exports\ReportsExport;
 use Illuminate\Support\Facades\Auth;
 
 class ReportController extends BaseController
@@ -90,11 +91,11 @@ class ReportController extends BaseController
         return $data;
 	}
 
-	protected function getNeedReport()
-	{
-		$data = [];
-		$data['labels'] = Need::all()->pluck('detail')->toArray();
-		$needs = Need::all()->pluck('detail', 'id');
+    protected function getNeedReport()
+    {
+        $data = [];
+        $data['labels'] = Need::all()->pluck('detail')->toArray();
+        $needs = Need::all()->pluck('detail', 'id');
         $admin = Auth::user();
         foreach ($needs as $id => $need) {
             if ($admin->role === Admin::CITY_ADMIN) {
@@ -106,5 +107,5 @@ class ReportController extends BaseController
             }
         }
         return $data;
-	}
+    }
 }
