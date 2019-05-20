@@ -185,7 +185,7 @@
                 customOptions.scales = {
                     yAxes: [{
                         ticks: {
-                            beginAtZero: false
+                            beginAtZero: true
                         }
                     }]
                 }
@@ -220,6 +220,20 @@
         }
 
         function loadLaborAbilityChart(type = 'bar') {
+            var customOptions = {
+                maintainAspectRatio: false
+            };
+
+            if (type === 'bar') {
+                customOptions.scales = {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            };
+
             $.ajax({
                 url : "/api/reports?type=labor_ability",
                 type : "get",
@@ -240,15 +254,27 @@
                                 }
                             ]
                         },
-                        options: {
-                            maintainAspectRatio: false
-                        }
+                        options: customOptions
                     });
                 }
             });
         }
 
         function loadDisabilityChart(type = 'bar') {
+            var customOptions = {
+                maintainAspectRatio: false
+            };
+
+            if (type === 'bar') {
+                customOptions.scales = {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            };
+
             $.ajax({
                 url : "/api/reports?type=disability",
                 type : "get",
@@ -273,22 +299,27 @@
                                 }
                             ]
                         },
-                        options: {
-                            maintainAspectRatio: false,
-                            scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        beginAtZero: true
-                                    }
-                                }]
-                            }
-                        }
+                        options: customOptions
                     });
                 }
             });
         }
 
         function loadNeedChart(type = 'bar') {
+            var customOptions = {
+                maintainAspectRatio: false
+            };
+
+            if (type === 'bar') {
+                customOptions.scales = {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            };
+
             $.ajax({
                 url : "/api/reports?type=need",
                 type : "get",
@@ -314,16 +345,7 @@
                                 }
                             ]
                         },
-                        options: {
-                            maintainAspectRatio: false,
-                            scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        beginAtZero: true
-                                    }
-                                }]
-                            }
-                        }
+                        options: customOptions
                     });
                 }
             });
