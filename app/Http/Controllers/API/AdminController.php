@@ -165,7 +165,9 @@ class AdminController extends BaseController
             $path = public_path('avatars/admins');
             $image->move($path, $name);
             if ($admin->image) {
-                unlink(public_path('avatars/admins'). '/'. $admin->image);
+                if (is_file(public_path('avatars/admins'). '/'. $admin->image)) {
+                    unlink(public_path('avatars/admins'). '/'. $admin->image);
+                }
             }
         }
         
@@ -212,7 +214,9 @@ class AdminController extends BaseController
             $path = public_path('avatars/admins');
             $image->move($path, $name);
             if ($admin->image) {
-                unlink(public_path('avatars/admins'). '/'. $admin->image);
+                if (is_file(public_path('avatars/admins'). '/'. $admin->image)) {
+                    unlink(public_path('avatars/admins'). '/'. $admin->image);
+                }
             }
         }
 
