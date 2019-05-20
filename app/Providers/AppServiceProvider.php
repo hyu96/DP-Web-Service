@@ -55,9 +55,9 @@ class AppServiceProvider extends ServiceProvider
                         'icon'  => 'download',
                         'active' => ['users/export']
                     ],
-                    'Admin',
+                    'Cán bộ quản lý',
                     [
-                        'text'   => 'Danh sách quản trị viên',
+                        'text'   => 'Danh sách cán bộ quản lý',
                         'url'    => 'admins',
                         'icon'   => 'user',
                         'active' => ['admins']
@@ -98,15 +98,15 @@ class AppServiceProvider extends ServiceProvider
                         'icon'  => 'download',
                         'active' => ['users/export']
                     ],
-                    'Admin',
+                    'Cán bộ quản lý',
                     [
-                        'text' => 'Danh sách quản trị viên',
+                        'text' => 'Danh sách cán bộ quản lý',
                         'url'  => 'admins',
                         'icon'  => 'user',
                         'active' => ['admins']
                     ],
                     [
-                        'text' => 'Thêm quản trị viên',
+                        'text' => 'Thêm cán bộ quản lý',
                         'url'  => 'admins/create',
                         'icon'  => 'plus-square',
                         'active' => ['admins/create']
