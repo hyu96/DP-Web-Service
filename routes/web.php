@@ -11,7 +11,8 @@
 |
 */
 
-Route::group(['middleware' => ['web', 'auth', 'verified']], function () {
+// Route::group(['middleware' => ['web', 'auth', 'verified']], function () {
+Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('/', function () {
         return view('home');
     })->name('admin.homepage');
@@ -46,4 +47,5 @@ Route::get('/home', function () {
     return redirect('/');
 });
 
-Auth::routes(['verify' => true]);
+// Auth::routes(['verify' => true]);
+Auth::routes();

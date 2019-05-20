@@ -73,7 +73,7 @@ class AdminController extends BaseController
             'api_token' => Str::random(60),
         ]);
 
-        event(new Registered($admin));
+        // event(new Registered($admin));
         return $this->responseSuccess(200, $admin);
     }
 
