@@ -20,6 +20,21 @@
         {!! Form::open(['url' => route('api.admins.info.edit'), 'method' => 'put', 'id' => 'admin-register-form']) !!}
             @csrf
             <div class="form-row">
+                <div class="form-input has-feedback {{ $errors->has('image') ? 'has-error' : '' }}">
+                    {{ Form::label('image', 'Ảnh cá nhân') }}
+                    {{ Form::file('image', ['accept' => 'image/x-png,image/gif,image/jpeg', 'id' => 'image']) }}
+                    <div>
+                        <img id="img-preview" src="/image/anonymous.png"/>
+                    </div>
+                    @if ($errors->has('image'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('image') }}</strong>
+                        </span>
+                    @endif
+                </div>
+            </div>
+
+            <div class="form-row">
                 <div class="form-input has-feedback {{ $errors->has('name') ? 'has-error' : '' }}">
                     {{ Form::label('name', 'Họ tên') }}
                     {{ Form::text('name', '', ['class' => 'form-control', 'required', 'autocomplete' => 'off', 'disabled' => true]) }}
@@ -142,6 +157,11 @@
 #admin-register-form .form-input {
     width: 48%;
 }
+
+#img-preview {
+    width: 200px;
+}
+
 </style>
 @stop
 
@@ -154,10 +174,17 @@
             e.preventDefault();
             $("#success-msg").css("display", "none");
             $("#errors-msg").css("display", "none");
+            var data = new FormData($(this)[0]);
+            data.append('_method', 'PUT');
             $.ajax({
                 url : '{{ route('api.admins.info.edit') }}',
-                type : "put",
-                data : $(this).serialize(),
+                type : "post",
+                data : data,
+                async: false,
+                cache: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                processData: false,
                 success : function (result){
                     $("#success-msg").css("display", "block");
                 },
@@ -171,6 +198,10 @@
                 }
             });
         })
+
+        $("#image").change(function() {
+            readURL(this);
+        });
     });
 
     function getUserData() {
@@ -194,6 +225,23 @@
         $('#birthday').val(data.birthday);
         $('#gender').val(data.gender);
         $('#identity_card').val(data.identity_card);
+        if (data.image) {
+            $('#img-preview').attr('src', `/avatars/admins/${data.image}`);
+        } else {
+            $('#img-preview').attr('src', "/image/anonymous.png");
+        }
+    }
+
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+          $('#img-preview ').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+      }
     }
 </script>
 @stop

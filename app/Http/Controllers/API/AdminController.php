@@ -51,10 +51,18 @@ class AdminController extends BaseController
             return $this->responseErrors(400, $validator->errors());
         }
 
+        $path = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $name = time().'_'.$image->getClientOriginalName();
+            $path = public_path('avatars/admins');
+            $image->move($path, $name);
+        }
         
         $admin = Admin::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'image' => $name,
             'password' => Hash::make($data['password']),
             'phone' => $data['phone'],
             'identity_card' => $data['identity_card'],
@@ -143,14 +151,27 @@ class AdminController extends BaseController
         $validator = Validator::make($data, [
             'email' => ['required', 'string', 'email', 'max:255', 'unique:admins,email,'. $admin->id],
             'phone' => ['required', 'string', 'min:10', 'regex:/^([0-9]+)$/'],
+            'image' => ['image']
         ], $messages);
 
         if ($validator->fails()) {
             return $this->responseErrors(400, $validator->errors());
         }
+
+        $path = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $name = time().'_'.$image->getClientOriginalName();
+            $path = public_path('avatars/admins');
+            $image->move($path, $name);
+            if ($admin->image) {
+                unlink(public_path('avatars/admins'). '/'. $admin->image);
+            }
+        }
         
         $admin->email = $data['email'];
         $admin->phone= $data['phone'];
+        $admin->image = $request->hasFile('image') ? $name : $admin->image;
         $admin->save();
         return $this->responseSuccess(200, 'Update info success');
     }
@@ -176,13 +197,27 @@ class AdminController extends BaseController
             'phone' => ['required', 'string', 'min:10', 'regex:/^([0-9]+)$/'],
             'birthday' => ['required', 'date'],
             'gender' => ['required', Rule::in(['male', 'female'])],
+            'image' => ['image']
         ], $messages);
 
         if ($validator->fails()) {
             return $this->responseErrors(400, $validator->errors());
         }
+
+        $path = null;
         $admin = Admin::find($id);
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $name = time().'_'.$image->getClientOriginalName();
+            $path = public_path('avatars/admins');
+            $image->move($path, $name);
+            if ($admin->image) {
+                unlink(public_path('avatars/admins'). '/'. $admin->image);
+            }
+        }
+
         $admin->update([
+            'image' => $request->hasFile('image') ? $name : $admin->image,
             'name' => $data['name'],
             'email' => $data['email'],
             'phone' => $data['phone'],

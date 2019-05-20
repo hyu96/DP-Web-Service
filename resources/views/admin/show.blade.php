@@ -13,17 +13,21 @@
     </div>
     
     <div class="alert alert-success" id="success-msg">
-       Cập nhật thông tin người khuyết tật thành công
+       Cập nhật thông tin cán bộ quản lý thành công
     </div>
 
     <div>
-        {!! Form::open(['url' => route('api.admins.edit', ['id' => $id]), 'method' => 'put', 'id' => 'admin-register-form', 'files' => true]) !!}
+        {!! Form::open(['url' => route('api.admins.edit', ['id' => $id]), 'method' => 'put', 'id' => 'admin-register-form']) !!}
             @csrf
             <div class="form-row">
                 <div class="form-input has-feedback {{ $errors->has('image') ? 'has-error' : '' }}">
                     {{ Form::label('image', 'Ảnh cá nhân') }}
+                    @if ($editable)
                     {{ Form::file('image', ['accept' => 'image/x-png,image/gif,image/jpeg', 'id' => 'image']) }}
-                    <div id="img-preview"></div>
+                    @endif
+                    <div>
+                        <img id="img-preview" src="/image/anonymous.png"/>
+                    </div>
                     @if ($errors->has('image'))
                     <span class="help-block">
                         <strong>{{ $errors->first('image') }}</strong>
@@ -155,6 +159,11 @@
 #admin-register-form .form-input {
     width: 48%;
 }
+
+#img-preview {
+    width: 200px;
+}
+
 </style>
 @stop
 
@@ -182,8 +191,6 @@
 
         $('.role').on('change', function(e) {
             var value = $(this).val()
-            console.log(value)
-            console.log(typeof value)
             if (value === '0') {
                 $('#district-select').prop('disabled', true);
             } else {
@@ -195,10 +202,17 @@
             $("#success-msg").css("display", "none");
             $("#errors-msg").css("display", "none");
             e.preventDefault();
+            var data = new FormData($(this)[0]);
+            data.append('_method', 'PUT');
             $.ajax({
                 url : $(this).attr('action'),
-                type : "put",
-                data : $(this).serialize(),
+                type : "post",
+                data : data,
+                async: false,
+                cache: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                processData: false,
                 success : function (result){
                     $("#success-msg").css("display", "block");
                 },
@@ -240,6 +254,12 @@
         $('#gender').val(data.gender);
         $('#identity_card').val(data.identity_card);
         $('#role').val(data.role);
+        if (data.image) {
+            $('#img-preview').attr('src', `/avatars/admins/${data.image}`);
+        } else {
+            $('#img-preview').attr('src', "/image/anonymous.png");
+        }
+
         if (data.district_id) {
             $('#district-select').val(data.district_id).trigger('change.select2');
         }

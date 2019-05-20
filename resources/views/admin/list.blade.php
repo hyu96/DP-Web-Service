@@ -12,6 +12,7 @@
         <tr>
         <th>Id</th>
         <th>Họ Tên</th>
+        <th>Ảnh cá nhân</th>
         <th>Địa chỉ email</th>
         <th>Số điện thoại</th>
         <th>Giới tính</th>
@@ -47,6 +48,15 @@
     </form>
 @endsection
 
+@section('css')
+<style>
+#admins-avatar {
+    width: 125px;
+    height: 125px;
+}
+</style>
+@endsection
+
 @section('js')
     <script>
         $( function() {
@@ -57,6 +67,18 @@
                 'columns': [
                     { data: 'id' },
                     { data: 'name' },
+                    {
+                        data: 'image',
+                        render: function ( data, type, row, meta ) {
+                            var html = '';
+                            if (data === null) {
+                                html += "<img id='admins-avatar' src='/image/anonymous.png'/>"
+                            } else {
+                                html += `<img id='admins-avatar' src='/avatars/admins/${data}'/>`
+                            }
+                            return html;
+                        },
+                    },
                     { data: 'email' },
                     { data: 'phone' },
                     {

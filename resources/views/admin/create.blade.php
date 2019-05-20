@@ -232,7 +232,7 @@
                 enctype: 'multipart/form-data',
                 processData: false,
                 success : function (result){
-                    window.location.href = "{{ route('admin.admins.index')}}";
+                    // window.location.href = "{{ route('admin.admins.index')}}";
                 },
                 error: function (response) {
                     $("#errors-container").html('');
@@ -281,7 +281,6 @@
       if (input.files && input.files[0]) {
         var reader = new FileReader();
         reader.onload = function(e) {
-            console.log('previewwww')
             $('#img-preview ').attr('src', e.target.result);
         }
 
