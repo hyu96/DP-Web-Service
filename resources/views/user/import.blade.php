@@ -49,6 +49,7 @@
             {!! Form::submit('Import người dùng', ['class' => 'btn btn-primary']) !!}
         </div>
     {!! Form::close() !!}
+    <div>*Tải mẫu file tại <a href="{{ route('admin.users.template') }}">đây</a></div>
 @endsection
 
 @section('css')

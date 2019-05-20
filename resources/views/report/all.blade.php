@@ -177,6 +177,20 @@
         var needChart;
 
         function loadGenderChart(type = 'bar') {
+            var customOptions = {
+                maintainAspectRatio: false
+            };
+
+            if (type === 'bar') {
+                customOptions.scales = {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: false
+                        }
+                    }]
+                }
+            };
+
             $.ajax({
                 url : "/api/reports?type=gender",
                 type : "get",
@@ -199,9 +213,7 @@
                                 }
                             ]
                         },
-                        options: {
-                            maintainAspectRatio: false
-                        }
+                        options: customOptions
                     });
                 }
             }); 
@@ -337,7 +349,7 @@
         $('input:radio[name=need-chart-type]').change(function () {
             var chartType = $(this).val();
             needChart.destroy();
-            loadLaborAbilityChart(chartType);
+            loadNeedChart(chartType);
         });
 
         $('input:radio[name=disability-chart-type]').change(function () {

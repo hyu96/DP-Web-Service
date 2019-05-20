@@ -45,7 +45,7 @@ class UserController extends BaseController
 
         $validator = Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email|admins,email'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'identity_card' => ['required', 'string', 'size:9', 'regex:/^([0-9]+)$/', 'unique:users'],
             'phone' => ['required', 'string', 'min:10', 'regex:/^([0-9]+)$/'],
             'birthday' => ['required', 'string'],

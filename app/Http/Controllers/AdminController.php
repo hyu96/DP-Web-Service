@@ -33,7 +33,6 @@ class AdminController extends Controller
         $districts = District::all();
         $subdistricts = Subdistrict::all();
         $editable = Auth::user()->role === Admin::CITY_ADMIN;
-        dd($editable);
         return view('admin.show')->with([
             'districts' => $districts,
             'subdistricts' => $subdistricts,

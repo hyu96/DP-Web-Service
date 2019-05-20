@@ -13,8 +13,24 @@
     </div>
 
     <div>
-        {!! Form::open(['url' => route('api.admins.store'), 'method' => 'post', 'id' => 'admin-register-form']) !!}
+        {!! Form::open(['url' => route('api.admins.store'), 'method' => 'post', 'id' => 'admin-register-form', 'files' => true]) !!}
             @csrf
+
+            <div class="form-row">
+                <div class="form-input has-feedback {{ $errors->has('image') ? 'has-error' : '' }}">
+                    {{ Form::label('image', 'Ảnh cá nhân') }}
+                    {{ Form::file('image', ['accept' => 'image/x-png,image/gif,image/jpeg', 'id' => 'image']) }}
+                    <div>
+                        <img id="img-preview" src="/image/anonymous.png"/>
+                    </div>
+                    @if ($errors->has('image'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('image') }}</strong>
+                        </span>
+                    @endif
+                </div>
+            </div>
+
             <div class="form-row">
                 <div class="form-input has-feedback {{ $errors->has('name') ? 'has-error' : '' }}">
                     {{ Form::label('name', 'Họ tên') }}
@@ -157,6 +173,11 @@
 #admin-register-form .form-input {
     width: 48%;
 }
+
+#img-preview {
+    width: 200px;
+}
+
 </style>
 @stop
 
@@ -171,33 +192,27 @@
         });
 
         $('#subdistrict-select').prop('disabled', true);
-        $("#district-select").select2({
-            ajax: {
-                url: "/api/districts",
-                type: "GET",
-                data: function (params) {
+        $.ajax({
+            url : '/api/districts',
+            type : "get",
+            success : function (result){
+                districts = result.data.map((district, index) => {
                     return {
-                        q: params.term, // search term
-                    };
-                },
-                processResults: function (result) {
-                    return {
-                        results: $.map(result.data, function (subdistrict) {
-                            return {
-                                id: subdistrict.id,
-                                text: subdistrict.name
-                            }
-                        })
-                    };
-                }
-            },
-            placeholder: 'Chọn 1 trong số lựa chọn sau',
-            allowClear: true,
+                        id: district.id,
+                        text: district.name
+                    }
+                })
+                $('#district-select').select2({
+                    data: districts,
+                    placeholder: 'Chọn 1 trong số lựa chọn sau',
+                    allowClear: true
+                });
+            }
         });
 
         $('.role').on('change', function(e) {
             var value = $(this).val()
-            if (value === 0) {
+            if (value === '0') {
                 $('#district-select').prop('disabled', true);
             } else {
                 $('#district-select').prop('disabled', false);
@@ -206,10 +221,16 @@
 
         $('form').submit(function(e) {
             e.preventDefault();
+            var data = new FormData($(this)[0]);
             $.ajax({
                 url : $(this).attr('action'),
                 type : "post",
-                data : $(this).serialize(),
+                data : data,
+                async: false,
+                cache: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                processData: false,
                 success : function (result){
                     window.location.href = "{{ route('admin.admins.index')}}";
                 },
@@ -223,6 +244,10 @@
                 }
             });
         })
+
+        $("#image").change(function() {
+            readURL(this);
+        });
     });
 
     function setBirthdayInput () {
@@ -251,5 +276,17 @@
         $('#disability').val('5');
         $('#disability_detail').val('Bình thường');
     };
+
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            console.log('previewwww')
+            $('#img-preview ').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
 </script>
 @stop

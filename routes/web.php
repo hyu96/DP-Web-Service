@@ -24,6 +24,7 @@ Route::group(['middleware' => ['web', 'auth', 'verified']], function () {
     Route::get('/users/{id}', 'UserController@show')->name('admin.users.show');
     Route::post('/users/approve/{id}', 'UserController@approve')->name('admin.users.approve');
     Route::post('/users/edit/{id}', 'UserController@edit')->name('admin.users.editUser');
+    Route::get('/users/import/template', 'UserController@importTemplate')->name('admin.users.template');
 
     Route::get('/admins', 'AdminController@index')->name('admin.admins.index');
     Route::get('/admins/create', 'AdminController@create')->name('admin.admins.create');

@@ -29,6 +29,19 @@ class UserController extends Controller
 
     public function show(Request $request, $id)
     {
+        $admin = Auth::user();
+        $user = User::find($id);
+        if (empty($user)) {
+            return abort('404');
+        }
+
+        if ($admin->role === 1) {
+            if ($admin->district_id !== $user->district_id) {
+                return abort('404');
+            }
+        }
+
+
         $disabilities = Disability::all()->pluck('name', 'id');
         $needs = Need::all();
         return view('user.show')->with([
@@ -52,6 +65,9 @@ class UserController extends Controller
 
     public function showUserImport()
     {
+        if (Auth::user()->role === 0) {
+            return abort('404');
+        }
         $district = District::find(Auth::user()->district_id);
         return view('user.import')->with([
             'district' => $district
@@ -84,5 +100,10 @@ class UserController extends Controller
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $failures = $e->failures();
         }
+    }
+
+    public function importTemplate()
+    {
+        return response()->download(public_path().'/files/import-template.xlsx');
     }
 }

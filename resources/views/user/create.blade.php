@@ -297,6 +297,7 @@ textarea {
 
         $('form').submit(function(e) {
             e.preventDefault();
+            $("#errors-msg").css("display", "none");
             $.ajax({
                 url : $(this).attr('action'),
                 type : "post",

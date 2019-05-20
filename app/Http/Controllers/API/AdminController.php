@@ -38,18 +38,20 @@ class AdminController extends BaseController
 
         $validator = Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:admins'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:admins,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'identity_card' => ['required', 'string', 'size:9', 'regex:/^([0-9]+)$/', 'unique:admins'],
+            'identity_card' => ['required', 'string', 'size:9', 'regex:/^([0-9]+)$/', 'unique:admins,identity_card'],
             'phone' => ['required', 'string', 'min:10', 'regex:/^([0-9]+)$/'],
             'birthday' => ['required', 'date'],
             'gender' => ['required', Rule::in(['male', 'female'])],
+            'image' => ['image']
         ], $messages);
 
         if ($validator->fails()) {
             return $this->responseErrors(400, $validator->errors());
         }
 
+        
         $admin = Admin::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -81,6 +83,9 @@ class AdminController extends BaseController
     public function show($id)
     {
         $admin = Admin::with(['district'])->find($id);
+        if (empty($admin)) {
+            return abort('404');
+        }
         return $this->responseSuccess(200, $admin);
     }
 
@@ -147,6 +152,47 @@ class AdminController extends BaseController
         $admin->email = $data['email'];
         $admin->phone= $data['phone'];
         $admin->save();
-        return $this->responseSuccess(200, 'Reset password success');
+        return $this->responseSuccess(200, 'Update info success');
+    }
+
+    public function edit(Request $request, $id)
+    {
+        $data = $request->all();
+        $messages = [
+            'required' => 'Giá trị :attribute không được trống.',
+            'string' => 'Giá trị của :attribute phải là chuỗi kí tự',
+            'email' => 'Địa chỉ email không hợp lệ',
+            'integer' => 'Giá trị của :attribute phải là số',
+            'size' => 'Giá trị của :attribute phải có :size kí tự',
+            'min' => 'Giá trị của :attribute ít nhất phải có :min kí tự',
+            'regex' => 'Giá trị của :attribute phải là chuỗi chữ số',
+            'unique' => ':attribute đã được sử dụng',
+        ];
+
+        $validator = Validator::make($data, [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:admins,email,'. $id],
+            'identity_card' => ['required', 'string', 'size:9', 'regex:/^([0-9]+)$/', 'unique:admins,identity_card,'. $id],
+            'phone' => ['required', 'string', 'min:10', 'regex:/^([0-9]+)$/'],
+            'birthday' => ['required', 'date'],
+            'gender' => ['required', Rule::in(['male', 'female'])],
+        ], $messages);
+
+        if ($validator->fails()) {
+            return $this->responseErrors(400, $validator->errors());
+        }
+        $admin = Admin::find($id);
+        $admin->update([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
+            'identity_card' => $data['identity_card'],
+            'birthday' => $data['birthday'],
+            'gender' => $data['gender'],
+            'role' => $data['role'],
+            'district_id' => $data['role'] === '0' ? null : $data['district_id'],
+        ]);
+
+        return $this->responseSuccess(200, $admin);
     }
 }

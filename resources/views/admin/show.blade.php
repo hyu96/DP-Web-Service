@@ -7,9 +7,31 @@
 @stop
 
 @section('content')
+    <div class="alert alert-danger" id="errors-msg">
+       Dữ liệu nhập vào không phù hợp:
+       <div id="errors-container"></div>
+    </div>
+    
+    <div class="alert alert-success" id="success-msg">
+       Cập nhật thông tin người khuyết tật thành công
+    </div>
+
     <div>
-        {!! Form::open(['url' => route('api.admins.edit', ['id' => $id]), 'method' => 'put', 'id' => 'admin-register-form']) !!}
+        {!! Form::open(['url' => route('api.admins.edit', ['id' => $id]), 'method' => 'put', 'id' => 'admin-register-form', 'files' => true]) !!}
             @csrf
+            <div class="form-row">
+                <div class="form-input has-feedback {{ $errors->has('image') ? 'has-error' : '' }}">
+                    {{ Form::label('image', 'Ảnh cá nhân') }}
+                    {{ Form::file('image', ['accept' => 'image/x-png,image/gif,image/jpeg', 'id' => 'image']) }}
+                    <div id="img-preview"></div>
+                    @if ($errors->has('image'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('image') }}</strong>
+                        </span>
+                    @endif
+                </div>
+            </div>
+
             <div class="form-row">
                 <div class="form-input has-feedback {{ $errors->has('name') ? 'has-error' : '' }}">
                     {{ Form::label('name', 'Họ tên') }}
@@ -45,8 +67,8 @@
 
                 <div class="form-input has-feedback {{ $errors->has('district_id') ? 'has-error' : '' }}">
                     {{ Form::label('district_id', 'Quận/Huyện') }}
-                    <select class="form-control search-select" name="district_id" id="district-select">
-                        
+                    <select class="form-control search-select" name="district_id" id="district-select" disabled>
+                        <option></option>
                     </select>
                     @if ($errors->has('district_id'))
                         <span class="help-block">
@@ -115,6 +137,10 @@
     display: none;
 }
 
+#success-msg {
+    display: none;
+}
+
 #admin-register-form {
     margin-right: 35px;
     height: 100%;
@@ -150,19 +176,46 @@
                     placeholder: 'Chọn 1 trong số lựa chọn sau',
                     allowClear: true
                 });
+                getUserData();
             }
         });
 
-        getUserData();
-
         $('.role').on('change', function(e) {
             var value = $(this).val()
-            if (value === 0) {
+            console.log(value)
+            console.log(typeof value)
+            if (value === '0') {
                 $('#district-select').prop('disabled', true);
             } else {
                 $('#district-select').prop('disabled', false);
             }
         })
+
+        $('form').submit(function(e) {
+            $("#success-msg").css("display", "none");
+            $("#errors-msg").css("display", "none");
+            e.preventDefault();
+            $.ajax({
+                url : $(this).attr('action'),
+                type : "put",
+                data : $(this).serialize(),
+                success : function (result){
+                    $("#success-msg").css("display", "block");
+                },
+                error: function (response) {
+                    $("#errors-container").html('');
+                    var errors = JSON.parse(response.responseText).messages;
+                    Object.keys(errors).forEach(function(key) {
+                        $("#errors-container").append($("<li>").text(errors[key][0]));
+                    });
+                    $("#errors-msg").css("display", "block");
+                }
+            });
+        })
+
+        $("#image").change(function() {
+          readURL(this);
+        });
     });
 
     function getUserData() {
@@ -187,13 +240,24 @@
         $('#gender').val(data.gender);
         $('#identity_card').val(data.identity_card);
         $('#role').val(data.role);
-        console.log('{{ $editable }}');
-        if ('{{ $editable }}') {
-            $('#district-select').prop('disabled', false);
-        }
         if (data.district_id) {
             $('#district-select').val(data.district_id).trigger('change.select2');
         }
+        if ('{{ $editable }}' && data.role === 1) {
+            $('#district-select').prop('disabled', false);
+        }
     };
+
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+          $('#img-preview ').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
 </script>
 @stop

@@ -50,55 +50,23 @@
 @section('js')
 <script>
     $( function() {
-        $("#subdistrict-select").select2({
-            ajax: {
-                url: "/api/subdistricts?district={{ $district->id }}",
-                type: "GET",
-                data: function (params) {
+        $.ajax({
+            url : "/api/subdistricts?district={{$district->id}}",
+            type : "get",
+            success : function (result){
+                subdistricts = result.data.map((subdistrict, index) => {
                     return {
-                        q: params.term, // search term
-                    };
-                },
-                processResults: function (result) {
-                    return {
-                        results: $.map(result.data, function (subdistrict) {
-                            return {
-                                id: subdistrict.id,
-                                text: subdistrict.name
-                            }
-                        })
-                    };
-                }
-            },
-            placeholder: 'Chọn 1 trong số lựa chọn sau',
-            allowClear: true,
+                        id: subdistrict.id,
+                        text: subdistrict.name
+                    }
+                })
+                $('#subdistrict-select').select2({
+                    data: subdistricts,
+                    placeholder: 'Chọn 1 trong số lựa chọn sau',
+                    allowClear: true
+                });
+            }
         });
-
-        // $('form').submit(function(e) {
-        //     e.preventDefault();
-        //     $.ajax({
-        //         type: 'get',
-        //         data: {
-        //             subdistrict_id: $('#district-select').val()
-        //         },
-        //         url: $(this).attr('action'),
-        //         success: function(data) {
-        //             $("#success-msg").css("display", "block");
-        //         },
-        //         error: function(res) {
-        //             $("#errors-container").html('');
-        //             var errors = JSON.parse(res.responseText).messages;
-        //             $('#errors-line-index').html(`Dữ liệu không phù hợp ở dòng <b>${errors.index[0]}</b>:`)
-        //             Object.keys(errors).forEach(function(key) {
-        //                 if (key === 'index') {
-        //                     return;
-        //                 }
-        //                 $("#errors-container").append($("<li>").text(errors[key][0]));
-        //             });
-        //             $("#errors-msg").css("display", "block");
-        //         }
-        //     });
-        // })
     });
 </script>
 @stop
