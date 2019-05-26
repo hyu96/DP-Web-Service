@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Export người dùng')
 
 @section('content_header')
     <h1>Export người dùng</h1>

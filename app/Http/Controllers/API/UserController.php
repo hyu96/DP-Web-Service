@@ -31,6 +31,10 @@ class UserController extends BaseController
     }
 
     public function store(Request $request) {
+        if (Auth::user()->role === Admin::CITY_ADMIN) {
+            return $this->responseErrors(401, 'Unauthorized');
+        }
+
         $data = $request->all();
         $messages = [
             'required' => ':attribute không được trống.',
@@ -87,25 +91,39 @@ class UserController extends BaseController
             'updated_at' => now()
         ]);
 
-        $userNeed = $data['need'];
-        foreach($userNeed as $need) {
-            $dataUserNeed[] = [
-                'user_id' => $user->id,
-                'need_id' => $need,
-                'detail' => $this->getNeedDetail($need, $data),
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
-            ];
+        if (!empty($data['need'])) {
+            $userNeed = $data['need'];
+            foreach($userNeed as $need) {
+                $dataUserNeed[] = [
+                    'user_id' => $user->id,
+                    'need_id' => $need,
+                    'detail' => $this->getNeedDetail($need, $data),
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+            }
+
+            if (!empty($dataUserNeed)) {
+                UserNeed::insert($dataUserNeed);
+            }
         }
-        UserNeed::insert($dataUserNeed);
-        return $this->responseSuccess(200, $user);
+
+        return $this->responseSuccess(200, User::where('id', $user->id)->with(['district', 'subdistrict', 'needs'])->first());
     }
 
     public function show($id)
     {
+        $admin = Auth::user();
         $user = User::where('id', $id)->with(['district', 'subdistrict', 'needs'])->first();
+        
+        if ($admin->role === 1) {
+            if ($admin->district_id !== $user->district_id) {
+                return $this->responseErrors(401, 'Unauthorized');
+            }
+        }
+
         if ($user === null) {
-            return $this->responseErrors(400, 'Thông tin người khuyết tật không tồn tại');
+            return $this->responseErrors(404, 'User not found');
         } else {
             return $this->responseSuccess(200, $user);
         }
@@ -113,6 +131,17 @@ class UserController extends BaseController
 
     public function edit(Request $request, $id)
     {
+        $user = User::find($id);
+        $admin = Auth::user();
+
+        if ($user === null) {
+            return $this->responseErrors(404, 'User not found');
+        } else {
+            if ($admin->district_id !== $user->district_id) {
+                return $this->responseErrors(401, 'Unauthorized');
+            }
+        }
+
         $data = $request->all();
         $messages = [
             'required' => ':attribute không được trống.',
@@ -146,7 +175,6 @@ class UserController extends BaseController
             return $this->responseErrors(400, $validator->errors());
         }
 
-        $user = User::find($id);
         $user->update([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -200,7 +228,7 @@ class UserController extends BaseController
     {
         switch ($need) {
             case Need::HOC_NGHE:
-                return $data['user-job-detail'];
+                return empty($data['user-job-detail']) ? '': $data['user-job-detail'];
                 break;
 
             default:
@@ -239,10 +267,26 @@ class UserController extends BaseController
     public function delete($id)
     {
         $user = User::find($id);
+        $admin = Auth::user();
+
+        if ($admin->role === 0) {
+            return $this->responseErrors(401, 'Unauthorized');
+        }
+
         if ($user === null) {
             return $this->responseErrors(400, 'User not found');
         } else {
+            if ($admin->role === 1) {
+                if ($admin->district_id !== $user->district_id) {
+                    return $this->responseErrors(401, 'Unauthorized');
+                }
+            }
+
             $user->delete();
+            $needs = UserNeed::where('user_id', $id)->get();
+            foreach ($needs as $need) {
+                $need->delete();
+            }
             return $this->responseSuccess(200, 'Delete success');
         }
     }

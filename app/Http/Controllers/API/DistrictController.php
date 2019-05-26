@@ -18,6 +18,9 @@ class DistrictController extends BaseController
     public function show($id)
     {
         $district = District::find($id);
+        if (empty($district)) {
+            return $this->responseErrors(404, 'District not found');
+        }
         return $this->responseSuccess(200, $district);
     }
 }

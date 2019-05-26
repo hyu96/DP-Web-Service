@@ -37,4 +37,5 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/districts/{id}', 'API\DistrictController@show')->name('api.districts.show');
 
     Route::get('/subdistricts', 'API\SubdistrictController@index')->name('api.subdistrict.index');
+    Route::get('/subdistricts/{id}', 'API\SubdistrictController@show')->name('api.subdistrict.show');
 });

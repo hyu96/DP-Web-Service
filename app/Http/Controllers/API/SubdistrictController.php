@@ -20,4 +20,13 @@ class SubdistrictController extends BaseController
         }
         return $this->responseSuccess(200, $subdistricts);
     }
+
+    public function show($id)
+    {
+        $subdistrict = Subdistrict::find($id);
+        if (empty($subdistrict)) {
+            return $this->responseErrors(404, 'Subdistrict not found');
+        }
+        return $this->responseSuccess(200, $subdistrict);
+    }
 }

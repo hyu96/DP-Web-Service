@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Thông tin người dùng')
 
 @section('content_header')
     <h1>Thông tin chi tiết người dùng</h1>
@@ -335,6 +335,7 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
                 getSubdistrictData(result.data);
             },
             error: function (response) {
+                window.location.href = "{{ route('page.404')}}";
             }
         });
         return data;

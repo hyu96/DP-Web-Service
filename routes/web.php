@@ -33,14 +33,17 @@ Route::group(['middleware' => ['web', 'auth', 'verified']], function () {
     Route::get('/reports', 'ReportController@all')->name('admin.report.all');
     Route::get('/reports/export', 'ReportController@export')->name('admin.report.export');
 
-    Route::get('/news', 'NewsController@index')->name('admin.news.index');
-    Route::get('/news/create', 'NewsController@create')->name('admin.news.create');
-    Route::post('/news/store', 'NewsController@store')->name('admin.news.store');
-    Route::get('/news/{id}', 'NewsController@show')->name('admin.news.show');
-
     Route::get('/info', 'AdminController@detail')->name('admin.admins.detail');
     Route::get('/info/reset-password', 'AdminController@resetPassword')->name('admin.admins.reset.password');
 });
+
+Route::get('/404', function() {
+    return abort('404');
+})->name('page.404');
+
+Route::get('/401', function() {
+    return abort('401');
+})->name('page.401');
 
 Route::get('/home', function () {
     return redirect('/');

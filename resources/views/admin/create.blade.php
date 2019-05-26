@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Thêm cán bộ quản lý')
 
 @section('content_header')
     <h1>Thêm cán bộ quản lý</h1>
@@ -232,7 +232,7 @@
                 enctype: 'multipart/form-data',
                 processData: false,
                 success : function (result){
-                    // window.location.href = "{{ route('admin.admins.index')}}";
+                    window.location.href = "{{ route('admin.admins.index')}}";
                 },
                 error: function (response) {
                     $("#errors-container").html('');

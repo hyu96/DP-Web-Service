@@ -24,6 +24,10 @@ class AdminController extends BaseController
 
     public function store(Request $request)
     {
+        if (Auth::user()->role !== Admin::CITY_ADMIN) {
+            return $this->responseErrors(401, 'Unauthorized');
+        }
+
         $data = $request->all();
         $messages = [
             'required' => 'Giá trị :attribute không được trống.',
@@ -52,6 +56,7 @@ class AdminController extends BaseController
         }
 
         $path = null;
+        $name = null;
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $name = time().'_'.$image->getClientOriginalName();
@@ -79,6 +84,9 @@ class AdminController extends BaseController
 
     public function delete($id)
     {
+        if (Auth::user()->role !== Admin::CITY_ADMIN) {
+            return $this->responseErrors(401, 'Unauthorized');
+        }
         $admin = Admin::find($id);
         if ($admin === null) {
             return $this->responseErrors(400, 'Admin not found');
@@ -92,7 +100,7 @@ class AdminController extends BaseController
     {
         $admin = Admin::with(['district'])->find($id);
         if (empty($admin)) {
-            return abort('404');
+            return $this->responseErrors(404, 'Admin not found');
         }
         return $this->responseSuccess(200, $admin);
     }

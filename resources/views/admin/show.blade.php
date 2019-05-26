@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Thông tin cán bộ quản lý')
 
 @section('content_header')
     <h1>Thông tin cán bộ quản lý</h1>
@@ -173,7 +173,7 @@
         $.ajax({
             url : '/api/districts',
             type : "get",
-            success : function (result){
+            success: function (result){
                 districts = result.data.map((district, index) => {
                     return {
                         id: district.id,
@@ -241,6 +241,7 @@
                 fillData(result.data);
             },
             error: function (response) {
+                window.location.href = "{{ route('page.404')}}";
             }
         });
         return data;

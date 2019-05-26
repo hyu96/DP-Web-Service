@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Thay đổi mật khẩu')
 
 @section('content_header')
     <h1>Thay đổi mật khẩu</h1>
