@@ -35,7 +35,12 @@ Route::group(['middleware' => ['auth:api']], function () {
     
 	Route::get('/districts', 'API\DistrictController@index')->name('api.districts.index');
     Route::get('/districts/{id}', 'API\DistrictController@show')->name('api.districts.show');
-
     Route::get('/subdistricts', 'API\SubdistrictController@index')->name('api.subdistrict.index');
     Route::get('/subdistricts/{id}', 'API\SubdistrictController@show')->name('api.subdistrict.show');
+
+    Route::get('/disabilities', 'API\DisabilityController@index')->name('api.disability.index');
+    Route::get('/disabilities/{id}', 'API\DisabilityController@show')->name('api.disability.show');
+    Route::post('/disabilities', 'API\DisabilityController@store')->name('api.disability.store');
+    Route::put('/disabilities/{id}', 'API\DisabilityController@edit')->name('api.disability.edit');
+    Route::delete('/disabilities/{id}', 'API\DisabilityController@delete')->name('api.disability.delete');
 });

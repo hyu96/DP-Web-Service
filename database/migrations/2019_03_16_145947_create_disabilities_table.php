@@ -16,6 +16,7 @@ class CreateDisabilitiesTable extends Migration
         Schema::create('disabilities', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->timestamps();
         });
     }
 

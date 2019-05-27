@@ -31,7 +31,7 @@ class Admin extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'api_token', 'email_verified_at'
+        'password', 'remember_token', 'api_token'
     ];
 
     public function district()

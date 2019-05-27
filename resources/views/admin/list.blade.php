@@ -19,6 +19,7 @@
         <th>Ngày sinh</th>
         <th>Cấp</th>
         <th>Quận/Huyện</th>
+        <th>Trạng thái</th>
         <th>Chỉnh sửa</th>
         <th>Xóa</th>
         </tr>
@@ -116,6 +117,19 @@
                         data: '',
                         render: function ( data, type, row, meta ) {
                             var html = '';
+                            console.log(row)
+                            if (row.email_verified_at) {
+                                html += "<div class='label label-success' id='status'>Kích hoạt</div";
+                            } else {
+                                html += "<div class='label label-default' id='status'>Chưa kích hoạt</div";
+                            }
+                            return html;
+                        },
+                    },
+                    {
+                        data: '',
+                        render: function ( data, type, row, meta ) {
+                            var html = '';
                             html += `<a class='btn btn-info user-info' href='/admins/${row.id}' style='margin-right: 20px; width: 80px'>Thông tin</a>`;
                             return html;
                         },
@@ -124,7 +138,9 @@
                         data: '',
                         render: function ( data, type, row, meta ) {
                             var html = '';
-                            if ('{{Auth::user()->role === 0}}') {
+                            var role = '{{ Auth::user()->role }}';
+                            var id = '{{ Auth::user()->id }}';
+                            if ((parseInt(role) === 0) && (parseInt(id) !== parseInt(row.id))) {
                                 html += `<a class='btn btn-danger btn-delete-admin' style='width: 80px' data-id='${row.id}'>Xóa</button>`;
                             }
                             return html;

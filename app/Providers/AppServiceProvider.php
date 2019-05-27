@@ -111,6 +111,13 @@ class AppServiceProvider extends ServiceProvider
                         'icon'  => 'plus-square',
                         'active' => ['admins/create']
                     ],
+                    'Dạng tật',
+                    [
+                        'text'    => 'Chi tiết',
+                        'icon'    => 'info-circle',
+                        'url'  => 'disabilities',
+                        'active'  => ['disabilities'],
+                    ],
                     'Báo cáo',
                     [
                         'text'    => 'Biểu đồ',
