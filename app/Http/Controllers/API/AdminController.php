@@ -43,7 +43,6 @@ class AdminController extends BaseController
         $validator = Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:admins,email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
             'identity_card' => ['required', 'string', 'size:9', 'regex:/^([0-9]+)$/', 'unique:admins,identity_card'],
             'phone' => ['required', 'string', 'min:10', 'regex:/^([0-9]+)$/'],
             'birthday' => ['required', 'date'],
@@ -68,7 +67,8 @@ class AdminController extends BaseController
             'name' => $data['name'],
             'email' => $data['email'],
             'image' => $name,
-            'password' => Hash::make($data['password']),
+            'password' => Hash::make('dpservice'),
+            'reset_password' => 0,
             'phone' => $data['phone'],
             'identity_card' => $data['identity_card'],
             'birthday' => $data['birthday'],
@@ -139,6 +139,7 @@ class AdminController extends BaseController
         }
 
         $admin->password = Hash::make($data['new_password']);
+        $admin->reset_password = 1;
         $admin->save();
         return $this->responseSuccess(200, 'Reset password success');
     }

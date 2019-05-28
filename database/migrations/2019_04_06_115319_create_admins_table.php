@@ -19,6 +19,7 @@ class CreateAdminsTable extends Migration
             $table->string('image')->nullable();
             $table->string('email')->unique();
             $table->string('password');
+            $table->boolean('reset_password')->default('0');
             $table->string('api_token', 80)
                     ->unique()
                     ->nullable()

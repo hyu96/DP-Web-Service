@@ -54,28 +54,6 @@
             </div>
 
             <div class="form-row">
-                <div class="form-input has-feedback {{ $errors->has('password') ? 'has-error' : '' }}">
-                    {{ Form::label('password', 'Mật Khẩu') }}
-                    {{ Form::password('password', ['class' => 'form-control', 'id' => 'password', 'required', 'autocomplete' => 'off']) }}
-                    @if ($errors->has('password'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('password') }}</strong>
-                        </span>
-                    @endif
-                </div>
-
-                <div class="form-input has-feedback {{ $errors->has('password_confirmation') ? 'has-error' : '' }}">
-                    {{ Form::label('password_confirmation', 'Nhập Lại Mật Khẩu') }}
-                    {{ Form::password('password_confirmation', ['class' => 'form-control', 'required', 'autocomplete' => 'off']) }}
-                    @if ($errors->has('password_confirmation'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('password_confirmation') }}</strong>
-                        </span>
-                    @endif
-                </div>
-            </div>
-
-            <div class="form-row">
                 <div class="form-input has-feedback {{ $errors->has('role') ? 'has-error' : '' }}">
                     {{ Form::label('role', 'Chức vụ') }}
                     {{ Form::select('role', ['Cán bộ quản lý thành phố', 'Cán bộ quản lý cấp quận'], old('gender'), ['class' => 'form-control role', 'required']) }}
