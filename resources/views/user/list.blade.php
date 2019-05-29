@@ -7,6 +7,10 @@
 @stop
 
 @section('content')
+    <div class="alert alert-success" id="delete-msg">
+       Xóa người khuyết tật thành công
+    </div>
+
     @if (\Session::has('success'))
         <div class="alert alert-success">
             {!! \Session::get('success') !!}
@@ -21,6 +25,7 @@
         <th>Số điện thoại</th>
         <th>Giới tính</th>
         <th>Địa chỉ</th>
+        <th>Dạng tật</th>
         <th>Quận/Huyện</th>
         <th>Phường/Xã</th>
         <th>Chỉnh sửa</th>
@@ -57,6 +62,10 @@
 #user-table button {
     width: 100px;
 }
+
+#delete-msg {
+    display: none;
+}
 </style>
 @stop
 
@@ -64,7 +73,7 @@
     <script>
         $( function() {
             var approveId = null;
-            $('#user-table').DataTable( {
+            var table = $('#user-table').DataTable( {
                 'ajax': '/api/users',
                 'scrollX': true,
                 'fixedHeader': true,
@@ -84,6 +93,12 @@
                         },
                     },
                     { data: 'address' },
+                    {
+                        data: '',
+                        render: function ( data, type, row, meta ) {
+                            return row.disability.name;
+                        },
+                    },
                     {
                         data: '',
                         render: function ( data, type, row, meta ) {
@@ -131,7 +146,10 @@
                     type : "delete",
                     data : $(this).serialize(),
                     success : function (result){
-                        window.location.href = "{{ route('admin.users.index')}}";
+                        $('#myModal').modal('hide');
+                        $("#delete-msg").css("display", "block");
+                        $("#delete-msg").fadeOut(8000);
+                        table.ajax.reload();
                     },
                     error: function (response) {
                         $("#errors-container").html('');

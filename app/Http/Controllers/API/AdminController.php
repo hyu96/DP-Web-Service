@@ -119,12 +119,13 @@ class AdminController extends BaseController
             'string' => 'Giá trị của :attribute phải là chuỗi kí tự',
             'confirmed' => 'Giá trị nhập lại mật khẩu mới không chính xác',
             'min' => 'Giá trị :attribute tối thiểu :min kí tự',
-            'max' => 'Giá trị :attribute tối đa :max kí tự'
+            'max' => 'Giá trị :attribute tối đa :max kí tự',
+            'regex' => 'Mật khẩu mới yêu cầu tối thiểu 8 kí tự, bao gồm chữ cái, chữ số và kí tự đặc biệt'
         ];
 
         $validator = Validator::make($data, [
             'password' => ['required', 'string', 'max:255'],
-            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
+            'new_password' => ['required', 'string', 'min:8', 'confirmed', 'regex:/^(?=.*?[a-zA-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/'],
         ], $messages);
 
         if ($validator->fails()) {

@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Import người dùng')
+@section('title', 'Import thông tin người khuyết tật')
 
 @section('content_header')
-    <h1>Import người dùng</h1>
+    <h1>Import thông tin người khuyết tật</h1>
 @stop
 
 @section('content')
@@ -46,7 +46,7 @@
         </div>
 
         <div class="form-group">
-            {!! Form::submit('Import người dùng', ['class' => 'btn btn-primary']) !!}
+            {!! Form::submit('Import', ['class' => 'btn btn-primary']) !!}
         </div>
     {!! Form::close() !!}
     <div>*Tải mẫu file tại <a href="{{ route('admin.users.template') }}">đây</a></div>

@@ -93,7 +93,6 @@ h4 {
     display: none;
 }
 
-
 </style>
 @endsection
 
@@ -145,12 +144,14 @@ h4 {
                     table.ajax.reload();
                 },
                 error: function (response) {
+                    $('#myModal').modal('hide');
                     $("#errors-container").html('');
                     var errors = JSON.parse(response.responseText).messages;
                     Object.keys(errors).forEach(function(key) {
                         $("#errors-container").append($("<li>").text(errors[key][0]));
                     });
                     $("#errors-msg").css("display", "block");
+                    $("#errors-msg").fadeOut(8000);
                 }
             });
         })

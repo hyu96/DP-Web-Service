@@ -7,6 +7,10 @@
 @stop
 
 @section('content')
+    <div class="alert alert-success" id="delete-msg">
+       Xóa cán bộ quản lý thành công
+    </div>
+
     <table id="user-table" class="table table-striped table-bordered display nowrap" style="width:100%">
     <thead>
         <tr>
@@ -55,13 +59,17 @@
     width: 125px;
     height: 125px;
 }
+
+#delete-msg {
+    display: none;
+}
 </style>
 @endsection
 
 @section('js')
     <script>
         $( function() {
-            $('#user-table').DataTable( {
+            var table = $('#user-table').DataTable( {
                 'ajax': '/api/admins',
                 'scrollX': true,
                 'fixedHeader': true,
@@ -167,7 +175,10 @@
                     type : "delete",
                     data : $(this).serialize(),
                     success : function (result){
-                        window.location.href = "{{ route('admin.admins.index')}}";
+                        $('#myModal').modal('hide');
+                        $("#delete-msg").css("display", "block");
+                        $("#delete-msg").fadeOut(8000);
+                        table.ajax.reload();
                     },
                     error: function (response) {
                         $("#errors-container").html('');

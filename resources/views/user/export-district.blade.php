@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Export người dùng')
+@section('title', 'Export thông tin người khuyết tật')
 
 @section('content_header')
-    <h1>Export người dùng</h1>
+    <h1>Export thông tin người khuyết tật</h1>
 @stop
 
 @section('content')
@@ -42,7 +42,7 @@
         </div>
 
         <div class="form-group">
-            {{ Form::submit("Export người dùng", ['class' => 'btn btn-primary']) }}
+            {{ Form::submit("Export", ['class' => 'btn btn-primary']) }}
         </div>
     {!! Form::close() !!}
 @endsection

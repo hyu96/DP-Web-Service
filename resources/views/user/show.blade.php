@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Thông tin người dùng')
+@section('title', 'Thông tin người khuyết tật')
 
 @section('content_header')
-    <h1>Thông tin chi tiết người dùng</h1>
+    <h1>Thông tin chi tiết người khuyết tật</h1>
 @stop
 
 @section('content')

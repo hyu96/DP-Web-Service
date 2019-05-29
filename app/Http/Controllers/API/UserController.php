@@ -25,7 +25,7 @@ class UserController extends BaseController
         if ($admin->role === Admin::CITY_ADMIN) {
             $users = User::with(['district', 'subdistrict'])->get();
         } else {
-            $users = User::where('district_id', $admin->district_id)->with(['district', 'subdistrict'])->get();
+            $users = User::where('district_id', $admin->district_id)->with(['district', 'subdistrict', 'disability'])->get();
         }
         return $this->responseSuccess(200, $users);
     }

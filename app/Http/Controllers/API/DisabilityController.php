@@ -8,8 +8,10 @@ use App\Http\Controllers\API\BaseController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Disability;
 use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\MessageBag;
 
 class DisabilityController extends BaseController
 {
@@ -98,6 +100,13 @@ class DisabilityController extends BaseController
         $disability = Disability::find($id);
         if (empty($disability)) {
             return $this->responseErrors(404, 'Disability not found');
+        }
+
+        $count = User::where('disability_id', $id)->get()->count();
+        if ($count > 0) {
+            $messageBag = new MessageBag;
+            $messageBag->add('user_has_disability', "Cannot delete. Disability being used by user.");
+            return $this->responseErrors(500, $messageBag->getMessages());
         }
 
         $disability->delete();
